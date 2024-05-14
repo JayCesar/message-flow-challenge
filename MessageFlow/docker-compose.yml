@@ -1,0 +1,24 @@
+version: '3.0'
+services:
+  mqseries:
+    image: ibmcom/mq:latest
+    ports:
+      - "1414:1414"
+      - "9443:9443"
+    hostname: mq
+    environment:
+      - LICENSE=accept
+      - MQ_QMGR_NAME=QM1
+      - MQ_APP_PASSWORD=passw0rd
+    container_name: mqserver
+    stdin_open: true
+    tty: true
+    restart: always
+    volumes:
+      - "./20-config.mqsc:/etc/mqm/20-config.mqsc"
+      - "qm1data:/mnt/mqm"
+volumes:
+  qm1data: 
+
+
+
