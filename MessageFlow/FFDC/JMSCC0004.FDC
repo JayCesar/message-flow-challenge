@@ -112,7 +112,7 @@ Stack trace to show the location of the FFST call
 |   	at org.springframework.jms.core.JmsTemplate.receiveSelected(JmsTemplate.java:773)
 |   	at org.springframework.jms.core.JmsTemplate.receive(JmsTemplate.java:749)
 |   	at org.springframework.jms.core.JmsTemplate.receiveAndConvert(JmsTemplate.java:855)
-|   	at com.ibmmq.messageflow.Controller.receiveMessage(Controller.java:34)
+|   	at com.ibmmq.messageflow.test01.Controller.receiveMessage(Controller.java:34)
 |   	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 |   	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
 |   	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
@@ -223,7 +223,7 @@ All currently set properties
 |   sun.boot.library.path                      :-  /home/jaycesar/.jdks/graalvm-jdk-17.0.11/lib
 |   sun.cpu.endian                             :-  little
 |   sun.io.unicode.encoding                    :-  UnicodeLittle
-|   sun.java.command                           :-  com.ibmmq.messageflow.MessageFlowApplication
+|   sun.java.command                           :-  com.ibmmq.messageflow.test02.MessageFlowApplication
 |   sun.java.launcher                          :-  SUN_STANDARD
 |   sun.jnu.encoding                           :-  UTF-8
 |   sun.management.compiler                    :-  HotSpot 64-Bit Tiered Compilers
@@ -1020,7 +1020,7 @@ All Thread Information
                                : org.springframework.jms.core.JmsTemplate.receiveSelected(JmsTemplate.java:773)
                                : org.springframework.jms.core.JmsTemplate.receive(JmsTemplate.java:749)
                                : org.springframework.jms.core.JmsTemplate.receiveAndConvert(JmsTemplate.java:855)
-                               : com.ibmmq.messageflow.Controller.receiveMessage(Controller.java:34)
+                               : com.ibmmq.messageflow.test01.Controller.receiveMessage(Controller.java:34)
                                : jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(NativeMethodAccessorImpl.java:-2)
                                : jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
                                : jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
@@ -1223,7 +1223,7 @@ All Thread Information
                                : org.springframework.jms.core.JmsTemplate.receiveSelected(JmsTemplate.java:773)
                                : org.springframework.jms.core.JmsTemplate.receive(JmsTemplate.java:749)
                                : org.springframework.jms.core.JmsTemplate.receiveAndConvert(JmsTemplate.java:855)
-                               : com.ibmmq.messageflow.Controller.receiveMessage(Controller.java:34)
+                               : com.ibmmq.messageflow.test01.Controller.receiveMessage(Controller.java:34)
                                : jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(NativeMethodAccessorImpl.java:-2)
                                : jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
                                : jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)

@@ -1,4 +1,4 @@
-package com.ibmmq.messageflow;
+package com.ibmmq.messageflow.test01;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jms.JmsException;
@@ -27,5 +27,5 @@ public class Controller {
             return "FAIL";
         }
     }
-    
+
 }
