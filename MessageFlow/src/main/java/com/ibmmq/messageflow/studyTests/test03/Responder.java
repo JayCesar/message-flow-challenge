@@ -1,4 +1,4 @@
-package com.ibmmq.messageflow.test04;
+package com.ibmmq.messageflow.studyTests.test03;
 
 
 import jakarta.jms.*;
@@ -7,9 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jms.annotation.JmsListener;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.jms.core.MessageCreator;
-import org.springframework.jms.listener.SessionAwareMessageListener;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @Component

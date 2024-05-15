@@ -1,16 +1,13 @@
-package com.ibmmq.messageflow.test03;
+package com.ibmmq.messageflow.studyTests.test04;
 
 import jakarta.jms.JMSException;
 import jakarta.jms.Message;
-import jakarta.jms.Session;
 import jakarta.jms.TextMessage;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.jms.annotation.EnableJms;
 import org.springframework.jms.core.JmsTemplate;
-import org.springframework.jms.core.MessageCreator;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -33,7 +30,7 @@ public class Requester {
         Order order = new Order(orderId, orderDetails);
         orders.put(orderId, order);
 
-        // maybe change it to doc example
+        // send and recebeite
         Message replyMsg = jmsTemplate.sendAndReceive(ORDER_QUEUE, session -> {
             TextMessage message = session.createTextMessage(orderDetails);
             message.setJMSCorrelationID(orderId);
@@ -44,8 +41,9 @@ public class Requester {
             TextMessage textReplyMsg = (TextMessage) replyMsg;
             String confirmationMessage = textReplyMsg.getText();
             String replyOrderId = textReplyMsg.getJMSCorrelationID();
-//            Order replyOrder = orders.get(replyOrderId);
-//            replyOrder.setConfirmation(confirmationMessage);
+            Order replyOrder = orders.get(orderId);
+            replyOrder.setConfirmation(confirmationMessage);
+            System.out.println(replyOrder.getConfirmation());
 
         } else {
             System.out.println("Nenhuma resposta recebida para o pedido: " + orderId);

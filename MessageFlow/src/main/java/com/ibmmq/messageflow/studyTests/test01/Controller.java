@@ -1,4 +1,4 @@
-package com.ibmmq.messageflow.test01;
+package com.ibmmq.messageflow.studyTests.test01;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jms.JmsException;

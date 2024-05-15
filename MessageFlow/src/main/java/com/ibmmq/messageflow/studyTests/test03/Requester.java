@@ -1,4 +1,4 @@
-package com.ibmmq.messageflow.test04;
+package com.ibmmq.messageflow.studyTests.test03;
 
 import java.util.Date;
 

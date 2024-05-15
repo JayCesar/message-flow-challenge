@@ -1,4 +1,4 @@
-package com.ibmmq.messageflow.test03;
+package com.ibmmq.messageflow.studyTests.test04;
 
 public class Order {
     String id;
@@ -12,5 +12,9 @@ public class Order {
 
     void setConfirmation(String confirmation) {
         this.confirmation = confirmation;
+    }
+
+    public String getConfirmation(){
+        return this.confirmation;
     }
 }

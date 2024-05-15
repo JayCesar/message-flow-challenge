@@ -1,4 +1,4 @@
-package com.ibmmq.messageflow.test02;
+package com.ibmmq.messageflow.studyTests.test02;
 
 import org.springframework.jms.annotation.JmsListener;
 
