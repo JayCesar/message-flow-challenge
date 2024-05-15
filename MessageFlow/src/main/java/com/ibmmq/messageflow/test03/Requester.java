@@ -25,10 +25,10 @@ public class Requester {
     public static void main(String[] args) throws JMSException {
         ConfigurableApplicationContext context = SpringApplication.run(Requester.class, args);
         JmsTemplate jmsTemplate = context.getBean(JmsTemplate.class);
+        jmsTemplate.setReceiveTimeout(5 * 1000);
 
         // sending the order:
-        String orderDetails = "UM";
-//        String orderDetails = "Mesa 5: 1x Lasanha, 2x Refrigerante";
+        String orderDetails = "Mesa 5: 1x Lasanha, 2x Refrigerante";
         String orderId = UUID.randomUUID().toString();
         Order order = new Order(orderId, orderDetails);
         orders.put(orderId, order);
@@ -46,7 +46,7 @@ public class Requester {
             String replyOrderId = textReplyMsg.getJMSCorrelationID();
 //            Order replyOrder = orders.get(replyOrderId);
 //            replyOrder.setConfirmation(confirmationMessage);
-            // Salvar replyOrder em um banco de dados ou outro armazenamento
+
         } else {
             System.out.println("Nenhuma resposta recebida para o pedido: " + orderId);
         }

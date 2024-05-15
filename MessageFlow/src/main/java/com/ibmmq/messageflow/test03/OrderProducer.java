@@ -2,15 +2,15 @@ package com.ibmmq.messageflow.test03;
 
 import jakarta.jms.*;
 import org.springframework.jms.annotation.JmsListener;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
-@Service
+@Component
 public class OrderProducer {
 
-    @JmsListener(destination = "ORDER.RESTAURANT")
-//    @JmsListener(destination = Requester.ORDER_QUEUE)
+    @JmsListener(destination = Requester.ORDER_QUEUE)
     public void onMessage(Message msg, Session session){
         String text;
+        System.out.println("Teste");
 
         try {
             if (msg instanceof TextMessage) text = ((TextMessage) msg).getText();
@@ -25,7 +25,7 @@ public class OrderProducer {
 
             System.out.println("========================================");
 
-            // Replying
+//             Replying
             final String msgID = msg.getJMSMessageID();
 
             MessageProducer replyDest = session.createProducer(msg.getJMSReplyTo());
