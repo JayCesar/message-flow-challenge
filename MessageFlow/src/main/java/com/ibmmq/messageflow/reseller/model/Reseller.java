@@ -1,6 +1,6 @@
 package com.ibmmq.messageflow.reseller.model;
 
-import com.ibmmq.messageflow.service.StockResselerService;
+import com.ibmmq.messageflow.service.StockResellerService;
 import jakarta.jms.JMSException;
 import jakarta.jms.Message;
 import jakarta.jms.TextMessage;
@@ -13,7 +13,7 @@ public class Reseller extends Thread {
 
     private JmsTemplate jmsTemplate;
     private String TICKETS_QUEUE;
-    private List<Book> bookStock = StockResselerService.generateBookList();
+    private List<Book> bookStock = StockResellerService.generateBookList();
 
     public Reseller(JmsTemplate jmsTemplate, String TICKETS_QUEUE) {
         this.jmsTemplate = jmsTemplate;
@@ -50,10 +50,13 @@ public class Reseller extends Thread {
         Message replyMsg = jmsTemplate.sendAndReceive(TICKETS_QUEUE, session -> {
             Book pickedBook = getRandomBook(bookStock);
             TextMessage message = session.createTextMessage(pickedBook.getName());
-            message.setJMSCorrelationID(pickedBook.getId());
             return message;
         });
-        return replyMsg;
+        return replyMsg; // verifica se tem em estoque, e avisa
+    }
+
+    public Double calculateProfit(String reply){
+        return null;
     }
 
 }

@@ -14,7 +14,7 @@ import java.util.*;
 @EnableJms
 @SpringBootApplication
 public class ResellerApp {
-    static final String TICKETES_QUEUE = "DEV.QUEUE.1";
+    static final String TICKETS_QUEUE = "DEV.QUEUE.1";
 
     public static void main(String[] args) throws JMSException {
 
@@ -23,14 +23,12 @@ public class ResellerApp {
         jmsTemplate.setReceiveTimeout(2 * 1000);
 
         // sellers
-        Reseller reseller01 = new Reseller(jmsTemplate, TICKETES_QUEUE);
-        Reseller reseller02 = new Reseller(jmsTemplate, TICKETES_QUEUE);
-        Reseller reseller03 = new Reseller(jmsTemplate, TICKETES_QUEUE);
+        Reseller reseller01 = new Reseller(jmsTemplate, TICKETS_QUEUE);
+        Reseller reseller02 = new Reseller(jmsTemplate, TICKETS_QUEUE);
+        Reseller reseller03 = new Reseller(jmsTemplate, TICKETS_QUEUE);
 
         // thread senting
         reseller01.start();
     }
-
-
 
 }
