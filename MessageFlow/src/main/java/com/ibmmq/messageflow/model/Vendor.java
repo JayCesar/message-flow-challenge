@@ -31,12 +31,16 @@ public class Vendor {
 
     @JmsListener(destination = TICKETS_QUEUE)
     public void onMessage(Message msg, Session session) {
-        String text;
+        String text = "";
+        String replyVendor = "";
         double newPrice = 0.0;
+
 
         try {
             if (msg instanceof TextMessage) text = ((TextMessage) msg).getText();
             else text = msg.toString();
+
+            TextMessage replyMsg = null;
 
             System.out.println();
             System.out.println("========================================");
@@ -47,35 +51,43 @@ public class Vendor {
             System.out.println();
 
             String resellerName = extractData(text, RESELLER_NAME);
-            System.out.println("Reseller: " + resellerName);
-
             String bookIdRequested = extractData(text, BOOK_ID);
-            System.out.println("VENDOR: " + bookIdRequested);
+            int requestedAmount = Integer.parseInt(extractData(text, AMOUNT));
+            Book requestedBook = bookStock.get(bookIdRequested);
 
-            String amount = extractData(text, AMOUNT);
-            System.out.println("AMOUNT: " + amount);
+            if (checkBookInStock(bookIdRequested)) {
+                if(verifyRequestedAmount(requestedAmount, requestedBook)){
 
-            Book requested = bookStock.get(bookIdRequested);
-//            System.out.println("Book requested:" + requested);
-//            System.out.println("Book ID:" + bookIdRequested);
+                    double oldPrice = requestedBook.getPrice();
+                    String formattedOldPrice = String.format("%.3f", oldPrice);
 
-//            if (checkBookInStock(bookIdRequested)) {
-//                int requestedAmount = takeRequestAmount(text);
-//                System.out.println("Requested amount: " + requestedAmount);
-//                if(verifyRequestedAmount(requestedAmount, requested)){
-//                    newPrice = calculateNewPrice(bookIdRequested);
-//                    System.out.println("Old amount: " + requested.getAmount());
-//                    calculateDayProfit(newPrice, requestedAmount);
-//                    int currentAAmount = requested.getAmount();
-//                    requested.setAmount(currentAAmount - requestedAmount);
-//                    System.out.println("Current amount: " + requested.getAmount());
-//                }else{
-//                    System.out.println("Quantidade superior");
-//                }
-//            }
+                    newPrice = calculateNewBookPrice(bookIdRequested);
+                    String formattedNewPrice = String.format("%.3f", newPrice);
+
+                    calculateDayProfit(newPrice, requestedAmount);
+
+                    int currentAmount = requestedBook.getAmount();
+                    requestedBook.setAmount(currentAmount - requestedAmount);
+
+                    double totalPriceToPay = requestedAmount * newPrice;
+
+                    replyVendor =
+                            "Resseler: " + resellerName + "\n" +
+                            "Requested book: " + requestedBook.getName() + "\n" +
+                            "Requested Amount: " + requestedAmount + "\n" +
+                            "Available in Stock: " + currentAmount + "\n" +
+                            "Old Price: R$ " + formattedOldPrice + "\n" +
+                            "Current Price: R$ " + formattedNewPrice + "\n" +
+                            "TOTAL to pay: R$" + totalPriceToPay;
+
+                }else{
+                    System.out.println("Quantidade superior");
+                }
+            }
+
             final String msgID = msg.getJMSMessageID();
             MessageProducer replyDest = session.createProducer(msg.getJMSReplyTo());
-            TextMessage replyMsg = session.createTextMessage("Replying to " + text);
+            replyMsg = session.createTextMessage("Vendor Reply: \n" + replyVendor);
             replyMsg.setJMSCorrelationID(msgID);
             replyDest.send(replyMsg);
 
@@ -85,14 +97,11 @@ public class Vendor {
 
     }
 
-    public Double calculateNewPrice(String requestedBook) {
+    public Double calculateNewBookPrice(String requestedBook) {
         Book bookRequested = bookStock.get(requestedBook);
         double newPrice = bookRequested.getPrice();
-        System.out.println("Old price: R$" + bookRequested.getPrice());
         newPrice += (newPrice * 0.05);
         bookRequested.setPrice(newPrice);
-        String formattedPrice = String.format("%.3f", newPrice);
-        System.out.println("New price: R$" + formattedPrice);
         return newPrice;
     }
 
@@ -104,13 +113,6 @@ public class Vendor {
         return false;
     }
 
-    public int takeRequestAmount(String message) {
-        String wordToFind = "Amount: ";
-        int indexOfWord = message.indexOf(wordToFind) + wordToFind.length();
-        String requestedAmount = message.substring(indexOfWord).trim();
-        return Integer.parseInt(requestedAmount);
-    }
-
     public boolean verifyRequestedAmount(int requestedAmount, Book requestedBook) {
         if (requestedAmount > requestedBook.getAmount()) return false;
         return true;
@@ -119,7 +121,6 @@ public class Vendor {
     public void calculateDayProfit(double newPrice, int requestedAmount){
         double profitSale = newPrice * requestedAmount;
         dayProfit += profitSale;
-        System.out.println("DayProfit: " + dayProfit);
     }
 
     public String extractData(String text, String typeData){

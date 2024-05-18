@@ -57,8 +57,6 @@ public class Reseller extends Thread {
         Book pickedResellerBook = getRandomBook(resellerBookStock);
         int amountRequested = generateRandomAmountOfBooks();
 
-//        String messageRequest = "Id: " + pickedResellerBook.getId() + ", Name: " + pickedResellerBook.getName() + ", Amount: " + amountRequested;
-
         String messageRequest =
                 "ResselerName: " + resselerName + "\n" +
                 "RequestedBookId: " + pickedResellerBook.getId() + "\n"  +
@@ -71,6 +69,7 @@ public class Reseller extends Thread {
             System.out.println("Sending message: \n" + message.getText());
             return message;
         });
+
         return replyMsg;
     }
 
