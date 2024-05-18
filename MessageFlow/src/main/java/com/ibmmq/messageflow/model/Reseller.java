@@ -14,10 +14,10 @@ import java.util.Random;
 @Getter
 public class Reseller extends Thread {
 
-    private Map<String, BookVendor> bookVendorStock = Vendor.bookStock;
+    private Map<String, Book> bookVendorStock = Vendor.bookStock;
     private JmsTemplate jmsTemplate;
     private String TICKETS_QUEUE;
-    private List<ResellerBook> resellerBookStock = StockBookService.generateBookStockSeller(bookVendorStock);
+    private List<Book> resellerBookStock = StockBookService.generateBookStockSeller(bookVendorStock);
 
     public Reseller(JmsTemplate jmsTemplate, String TICKETS_QUEUE) {
         this.jmsTemplate = jmsTemplate;
@@ -43,7 +43,7 @@ public class Reseller extends Thread {
         }
     }
 
-    private static ResellerBook getRandomBook(List<ResellerBook> resellerBookList) {
+    private static Book getRandomBook(List<Book> resellerBookList) {
         Random random = new Random();
         int randomIndex = random.nextInt(resellerBookList.size());
         return resellerBookList.get(randomIndex);
@@ -51,7 +51,7 @@ public class Reseller extends Thread {
 
     public Message sendAndReceive(){
 
-        ResellerBook pickedResellerBook = getRandomBook(resellerBookStock);
+        Book pickedResellerBook = getRandomBook(resellerBookStock);
 
         String messageRequest = "Id: " + pickedResellerBook.getId() + ", Name: " + pickedResellerBook.getName();
 

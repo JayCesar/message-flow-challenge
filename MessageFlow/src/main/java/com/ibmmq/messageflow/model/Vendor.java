@@ -17,7 +17,7 @@ public class Vendor {
     @Autowired
     private JmsTemplate jmsTemplate;
 
-    static Map<String, BookVendor> bookStock = StockBookService.generateBookStockVendor();
+    static Map<String, Book> bookStock = StockBookService.generateBookStockVendor();
 
     @JmsListener(destination = TICKETS_QUEUE)
     public void onMessage(Message msg, Session session){

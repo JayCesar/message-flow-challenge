@@ -1,7 +1,7 @@
 package com.ibmmq.messageflow.service;
 
 import com.ibmmq.messageflow.model.ResellerBook;
-import com.ibmmq.messageflow.model.BookVendor;
+import com.ibmmq.messageflow.model.Book;
 import lombok.Getter;
 import org.springframework.stereotype.Service;
 
@@ -47,19 +47,19 @@ public abstract class StockBookService {
         };
     }
 
-    public static List<ResellerBook> generateBookStockSeller(Map<String, BookVendor> bookVendorStock) {
+    public static List<Book> generateBookStockSeller(Map<String, Book> bookVendorStock) {
 
-        List<ResellerBook> bookVendorList = new ArrayList<>();
-        for (Map.Entry<String, BookVendor> entry : bookVendorStock.entrySet()) {
-            ResellerBook resellerBook = new ResellerBook(entry.getValue().getId(), entry.getValue().getName(), entry.getValue().getPrice());
+        List<Book> bookVendorList = new ArrayList<>();
+        for (Map.Entry<String, Book> entry : bookVendorStock.entrySet()) {
+            Book resellerBook = new Book(entry.getValue().getId(), entry.getValue().getName(), entry.getValue().getPrice(), entry.getValue().getAmount());
             bookVendorList.add(resellerBook);
         }
         return bookVendorList;
     }
 
-    public static Map<String, BookVendor> generateBookStockVendor() {
+    public static Map<String, Book> generateBookStockVendor() {
 
-        Map<String, BookVendor> bookVendorStock = new HashMap<>();
+        Map<String, Book> bookVendorStock = new HashMap<>();
 
         String[] titles = generateBookTitles();
         for (int i = 0; i < titles.length; i++) {
@@ -67,8 +67,8 @@ public abstract class StockBookService {
             String name = titles[i];
             Double price = 20.0 + (i * 1.5);
 
-            BookVendor bookVendor = new BookVendor(id, name, price, 20);
-            bookVendorStock.put(bookVendor.getName(), bookVendor);
+            Book book = new Book(id, name, price, 20);
+            bookVendorStock.put(book.getName(), book);
         }
 
         return bookVendorStock;
