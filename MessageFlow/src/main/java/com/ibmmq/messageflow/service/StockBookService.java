@@ -65,7 +65,6 @@ public abstract class StockBookService {
         String[] titles = generateBookTitles();
         for (int i = 0; i < titles.length; i++) {
             String id = generateRandomId(i);
-            System.out.println("Id gerado: " + id);
             String name = titles[i];
             Double price = 20.0 + (i * 1.5);
 

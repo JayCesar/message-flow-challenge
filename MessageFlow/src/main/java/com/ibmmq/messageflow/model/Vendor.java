@@ -12,6 +12,8 @@ import java.util.Map;
 @Component
 public class Vendor {
 
+    static double dayProfit = 0.0;
+
     static final String TICKETS_QUEUE = "DEV.QUEUE.1";
 
     @Autowired
@@ -20,7 +22,7 @@ public class Vendor {
     static Map<String, Book> bookStock = StockBookService.generateBookStockVendor();
 
     @JmsListener(destination = TICKETS_QUEUE)
-    public void onMessage(Message msg, Session session){
+    public void onMessage(Message msg, Session session) {
         String text;
         double newPrice = 0.0;
 
@@ -41,13 +43,21 @@ public class Vendor {
             System.out.println("Book requested:" + requested);
             System.out.println("Book ID:" + bookIdRequested);
 
-//            if(checkBookInStock(bookIdRequested)) {
-//                newPrice = calculateNewPrice(bookIdRequested);
-//                System.out.println("Old amount: " + requested.getAmount());
-//                int currentAAmount = requested.getAmount();
-//                requested.setAmount(currentAAmount - 1);
-//                System.out.println("Current amount: " + requested.getAmount());
-//            }
+            if (checkBookInStock(bookIdRequested)) {
+                int requestedAmount = takeRequestAmount(text);
+                System.out.println("Requested amount: " + requestedAmount);
+                if(verifyRequestedAmount(requestedAmount, requested)){
+                    newPrice = calculateNewPrice(bookIdRequested);
+                    System.out.println("Old amount: " + requested.getAmount());
+                    calculateDayProfit(newPrice, requestedAmount);
+                    int currentAAmount = requested.getAmount();
+                    requested.setAmount(currentAAmount - requestedAmount);
+                    System.out.println("Current amount: " + requested.getAmount());
+                }else{
+                    System.out.println("Quantidade superior");
+                }
+
+            }
 
             final String msgID = msg.getJMSMessageID();
             MessageProducer replyDest = session.createProducer(msg.getJMSReplyTo());
@@ -55,32 +65,47 @@ public class Vendor {
             replyMsg.setJMSCorrelationID(msgID);
             replyDest.send(replyMsg);
 
-        }catch (JMSException e){
+        } catch (JMSException e) {
             e.printStackTrace();
         }
 
     }
 
-    public Double calculateNewPrice(String requestedBook){
+    public Double calculateNewPrice(String requestedBook) {
         Book bookRequested = bookStock.get(requestedBook);
         double newPrice = bookRequested.getPrice();
         System.out.println("Old price: R$" + bookRequested.getPrice());
-        newPrice+= (newPrice * 0.05);
+        newPrice += (newPrice * 0.05);
         bookRequested.setPrice(newPrice);
-        System.out.println("New price: R$" + bookRequested.getPrice());
+        String formattedPrice = String.format("%.3f", newPrice);
+        System.out.println("New price: R$" + formattedPrice);
         return newPrice;
     }
 
-    public void removesAmountOfBookFromStock(String bookIdRequested){
-
-    }
-
-    public boolean checkBookInStock(String bookIdRequested){
-        if(bookStock.containsKey(bookIdRequested)){
+    public boolean checkBookInStock(String bookIdRequested) {
+        if (bookStock.containsKey(bookIdRequested)) {  // Does this type exist?
             Book requested = bookStock.get(bookIdRequested);
-            if(requested.getAmount() >= 1) return true;
+            if (requested.getAmount() >= 1) return true;
         }
         return false;
+    }
+
+    public int takeRequestAmount(String message) {
+        String wordToFind = "Amount: ";
+        int indexOfWord = message.indexOf(wordToFind) + wordToFind.length();
+        String requestedAmount = message.substring(indexOfWord).trim();
+        return Integer.parseInt(requestedAmount);
+    }
+
+    public boolean verifyRequestedAmount(int requestedAmount, Book requestedBook) {
+        if (requestedAmount > requestedBook.getAmount()) return false;
+        return true;
+    }
+
+    public void calculateDayProfit(double newPrice, int requestedAmount){
+        double profitSale = newPrice * requestedAmount;
+        dayProfit += profitSale;
+        System.out.println("DayProfit: " + dayProfit);
     }
 
 }

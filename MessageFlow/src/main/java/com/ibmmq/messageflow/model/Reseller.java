@@ -52,8 +52,9 @@ public class Reseller extends Thread {
     public Message sendAndReceive(){
 
         Book pickedResellerBook = getRandomBook(resellerBookStock);
+        int amountRequested = generateRandomAmountOfBooks();
 
-        String messageRequest = "Id: " + pickedResellerBook.getId() + ", Name: " + pickedResellerBook.getName();
+        String messageRequest = "Id: " + pickedResellerBook.getId() + ", Name: " + pickedResellerBook.getName() + ", Amount: " + amountRequested;
 
         Message replyMsg = jmsTemplate.sendAndReceive(TICKETS_QUEUE, session -> {
             TextMessage message = session.createTextMessage(messageRequest);
@@ -62,6 +63,12 @@ public class Reseller extends Thread {
             return message;
         });
         return replyMsg;
+    }
+
+    public int generateRandomAmountOfBooks(){
+        Random random = new Random();
+        int randomAmount = random.nextInt(5) + 1;
+        return randomAmount; 
     }
 
     public Double calculateProfit(String reply){
