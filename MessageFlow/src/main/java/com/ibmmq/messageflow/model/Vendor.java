@@ -8,6 +8,8 @@ import org.springframework.jms.core.JmsTemplate;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Component
 public class Vendor {
@@ -15,6 +17,12 @@ public class Vendor {
     static double dayProfit = 0.0;
 
     static final String TICKETS_QUEUE = "DEV.QUEUE.1";
+
+    private final String RESELLER_NAME = "resellerName";
+
+    private final String BOOK_ID = "id";
+
+    private final String AMOUNT = "amount";
 
     @Autowired
     private JmsTemplate jmsTemplate;
@@ -38,7 +46,15 @@ public class Vendor {
             System.out.println("========================================");
             System.out.println();
 
-            String bookIdRequested = text.substring(4, 12);
+            String resellerName = extractData(text, RESELLER_NAME);
+            System.out.println("Reseller: " + resellerName);
+
+            String bookIdRequested = extractData(text, BOOK_ID);
+            System.out.println("VENDOR: " + bookIdRequested);
+
+            String amount = extractData(text, AMOUNT);
+            System.out.println("AMOUNT: " + amount);
+
             Book requested = bookStock.get(bookIdRequested);
 //            System.out.println("Book requested:" + requested);
 //            System.out.println("Book ID:" + bookIdRequested);
@@ -104,6 +120,32 @@ public class Vendor {
         double profitSale = newPrice * requestedAmount;
         dayProfit += profitSale;
         System.out.println("DayProfit: " + dayProfit);
+    }
+
+    public String extractData(String text, String typeData){
+        String requestedData = null;
+        Pattern pattern = null;
+        Matcher macther = null;
+
+        if(typeData.equalsIgnoreCase(BOOK_ID)){
+            pattern = Pattern.compile("RequestedBookId: (\\w+)");
+            macther = pattern.matcher(text);
+            requestedData = macther.find() ? macther.group(1) : "";
+        }
+
+        if (typeData.equalsIgnoreCase(RESELLER_NAME)) {
+            pattern = Pattern.compile("ResselerName: (\\w+)");
+            macther = pattern.matcher(text);
+            requestedData = macther.find() ? macther.group(1) : "";
+        }
+
+        if (typeData.equalsIgnoreCase(AMOUNT)) {
+            pattern = Pattern.compile("RequestedAmount: (\\w+)");
+            macther = pattern.matcher(text);
+            requestedData = macther.find() ? macther.group(1) : "";
+        }
+
+        return requestedData;
     }
 
 }
