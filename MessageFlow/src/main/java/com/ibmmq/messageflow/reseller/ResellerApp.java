@@ -1,8 +1,7 @@
 package com.ibmmq.messageflow.reseller;
 
-import com.ibmmq.messageflow.reseller.model.Book;
 import com.ibmmq.messageflow.reseller.model.Reseller;
-import jakarta.jms.JMSException;
+import jakarta.jms.*;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -22,13 +21,21 @@ public class ResellerApp {
         JmsTemplate jmsTemplate = context.getBean(JmsTemplate.class);
         jmsTemplate.setReceiveTimeout(2 * 1000);
 
-        // sellers
         Reseller reseller01 = new Reseller(jmsTemplate, TICKETS_QUEUE);
-        Reseller reseller02 = new Reseller(jmsTemplate, TICKETS_QUEUE);
-        Reseller reseller03 = new Reseller(jmsTemplate, TICKETS_QUEUE);
 
-        // thread senting
+        // send
         reseller01.start();
+
+
+
     }
 
 }
+
+
+
+//Message replyMsg = jmsTemplate.sendAndReceive(TICKETS_QUEUE, session -> {
+//    TextMessage message = session.createTextMessage(payload);
+//    System.out.println("Sending message: " + message.getText());
+//    return message;
+//});

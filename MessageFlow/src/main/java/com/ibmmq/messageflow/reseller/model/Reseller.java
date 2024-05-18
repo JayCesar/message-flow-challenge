@@ -3,8 +3,10 @@ package com.ibmmq.messageflow.reseller.model;
 import com.ibmmq.messageflow.service.StockResellerService;
 import jakarta.jms.JMSException;
 import jakarta.jms.Message;
+import jakarta.jms.Session;
 import jakarta.jms.TextMessage;
 import org.springframework.jms.core.JmsTemplate;
+import org.springframework.jms.core.MessageCreator;
 
 import java.util.List;
 import java.util.Random;
@@ -24,7 +26,6 @@ public class Reseller extends Thread {
     public void run() {
         for (int i = 0; i < 10; i++) {
             Message replyMsg = sendAndReceive();
-
             if (replyMsg != null) {
                 TextMessage textReplyMsg = (TextMessage) replyMsg;
                 String confirmationMessage = null;
@@ -47,12 +48,13 @@ public class Reseller extends Thread {
     }
 
     public Message sendAndReceive(){
+        Book pickedBook = getRandomBook(bookStock);
         Message replyMsg = jmsTemplate.sendAndReceive(TICKETS_QUEUE, session -> {
-            Book pickedBook = getRandomBook(bookStock);
             TextMessage message = session.createTextMessage(pickedBook.getName());
+            System.out.println("Sending message: " + message.getText());
             return message;
         });
-        return replyMsg; // verifica se tem em estoque, e avisa
+        return replyMsg;
     }
 
     public Double calculateProfit(String reply){
