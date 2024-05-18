@@ -34,12 +34,19 @@ public class Vendor {
             System.out.println("Responder received message: " + text);
             System.out.println("           Redelivery flag: " + msg.getJMSRedelivered());
             System.out.println("========================================");
+            System.out.println();
 
-//            String requestedBook = text.substring(19);
-            String requestedBook = text.substring(0, 12);
+            String bookIdRequested = text.substring(4, 12);
+            Book requested = bookStock.get(bookIdRequested);
+            System.out.println("Book requested:" + requested);
+            System.out.println("Book ID:" + bookIdRequested);
 
-//            if(bookStock.containsKey(requestedBook)) {
-//                newPrice = calculateNewPrice(requestedBook);
+//            if(checkBookInStock(bookIdRequested)) {
+//                newPrice = calculateNewPrice(bookIdRequested);
+//                System.out.println("Old amount: " + requested.getAmount());
+//                int currentAAmount = requested.getAmount();
+//                requested.setAmount(currentAAmount - 1);
+//                System.out.println("Current amount: " + requested.getAmount());
 //            }
 
             final String msgID = msg.getJMSMessageID();
@@ -54,12 +61,26 @@ public class Vendor {
 
     }
 
-//    public Double calculateNewPrice(String requestedBook){
-//        BookVendor bookRequested = bookStock.get(requestedBook);
-//        double newPrice = bookRequested.getPrice();
-//        newPrice+= (newPrice * 0.05);
-//        bookRequested.setPrice(newPrice);
-//        return newPrice;
-//    }
+    public Double calculateNewPrice(String requestedBook){
+        Book bookRequested = bookStock.get(requestedBook);
+        double newPrice = bookRequested.getPrice();
+        System.out.println("Old price: R$" + bookRequested.getPrice());
+        newPrice+= (newPrice * 0.05);
+        bookRequested.setPrice(newPrice);
+        System.out.println("New price: R$" + bookRequested.getPrice());
+        return newPrice;
+    }
+
+    public void removesAmountOfBookFromStock(String bookIdRequested){
+
+    }
+
+    public boolean checkBookInStock(String bookIdRequested){
+        if(bookStock.containsKey(bookIdRequested)){
+            Book requested = bookStock.get(bookIdRequested);
+            if(requested.getAmount() >= 1) return true;
+        }
+        return false;
+    }
 
 }

@@ -57,6 +57,7 @@ public class Reseller extends Thread {
 
         Message replyMsg = jmsTemplate.sendAndReceive(TICKETS_QUEUE, session -> {
             TextMessage message = session.createTextMessage(messageRequest);
+            System.out.println();
             System.out.println("Sending message: " + message.getText());
             return message;
         });

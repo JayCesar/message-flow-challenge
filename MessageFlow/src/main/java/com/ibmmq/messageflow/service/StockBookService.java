@@ -1,10 +1,11 @@
 package com.ibmmq.messageflow.service;
 
-import com.ibmmq.messageflow.model.ResellerBook;
 import com.ibmmq.messageflow.model.Book;
 import lombok.Getter;
 import org.springframework.stereotype.Service;
 
+import java.math.BigInteger;
+import java.security.SecureRandom;
 import java.util.*;
 
 @Service
@@ -63,15 +64,22 @@ public abstract class StockBookService {
 
         String[] titles = generateBookTitles();
         for (int i = 0; i < titles.length; i++) {
-            String id = UUID.randomUUID().toString().replaceAll("-", "").substring(0, 6) + i;
+            String id = generateRandomId(i);
+            System.out.println("Id gerado: " + id);
             String name = titles[i];
             Double price = 20.0 + (i * 1.5);
 
             Book book = new Book(id, name, price, 20);
-            bookVendorStock.put(book.getName(), book);
+            bookVendorStock.put(book.getId(), book);
         }
 
         return bookVendorStock;
+    }
+
+    public static String generateRandomId(int cont) {
+        String id = UUID.randomUUID().toString().replaceAll("-", "").substring(0, 6) + cont;
+        if(id.length() == 7) id+=cont;
+        return id;
     }
 
 }
