@@ -1,6 +1,6 @@
-package com.ibmmq.messageflow.reseller.model;
+package com.ibmmq.messageflow.model;
 
-import com.ibmmq.messageflow.service.StockResellerService;
+import com.ibmmq.messageflow.service.StockBookService;
 import jakarta.jms.JMSException;
 import jakarta.jms.Message;
 import jakarta.jms.TextMessage;
@@ -8,14 +8,16 @@ import lombok.Getter;
 import org.springframework.jms.core.JmsTemplate;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 @Getter
 public class Reseller extends Thread {
 
+    private Map<String, BookVendor> bookVendorStock = Vendor.bookStock;
     private JmsTemplate jmsTemplate;
     private String TICKETS_QUEUE;
-    private List<BookReseller> bookResellerStock = StockResellerService.generateBookList();
+    private List<ResellerBook> resellerBookStock = StockBookService.generateBookStockSeller(bookVendorStock);
 
     public Reseller(JmsTemplate jmsTemplate, String TICKETS_QUEUE) {
         this.jmsTemplate = jmsTemplate;
@@ -41,17 +43,17 @@ public class Reseller extends Thread {
         }
     }
 
-    private static BookReseller getRandomBook(List<BookReseller> bookResellerList) {
+    private static ResellerBook getRandomBook(List<ResellerBook> resellerBookList) {
         Random random = new Random();
-        int randomIndex = random.nextInt(bookResellerList.size());
-        return bookResellerList.get(randomIndex);
+        int randomIndex = random.nextInt(resellerBookList.size());
+        return resellerBookList.get(randomIndex);
     }
 
     public Message sendAndReceive(){
 
-        BookReseller pickedBookReseller = getRandomBook(bookResellerStock);
+        ResellerBook pickedResellerBook = getRandomBook(resellerBookStock);
 
-        String messageRequest = "Id: " + pickedBookReseller.getId() + ", Name: " + pickedBookReseller.getName();
+        String messageRequest = "Id: " + pickedResellerBook.getId() + ", Name: " + pickedResellerBook.getName();
 
         Message replyMsg = jmsTemplate.sendAndReceive(TICKETS_QUEUE, session -> {
             TextMessage message = session.createTextMessage(messageRequest);

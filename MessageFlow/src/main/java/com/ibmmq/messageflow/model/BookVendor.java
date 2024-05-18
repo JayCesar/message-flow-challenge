@@ -1,4 +1,4 @@
-package com.ibmmq.messageflow.reseller.model;
+package com.ibmmq.messageflow.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

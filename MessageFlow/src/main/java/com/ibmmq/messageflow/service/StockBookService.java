@@ -1,13 +1,15 @@
 package com.ibmmq.messageflow.service;
 
-import com.ibmmq.messageflow.reseller.model.BookReseller;
-import com.ibmmq.messageflow.reseller.model.BookVendor;
+import com.ibmmq.messageflow.model.ResellerBook;
+import com.ibmmq.messageflow.model.BookVendor;
+import lombok.Getter;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
 
 @Service
-public abstract class StockResellerService {
+@Getter
+public abstract class StockBookService {
 
     public static String[] generateBookTitles() {
         return new String[]{
@@ -45,19 +47,14 @@ public abstract class StockResellerService {
         };
     }
 
-    public static List<BookReseller> generateBookList() {
-        List<BookReseller> bookResellerList = new ArrayList<>();
+    public static List<ResellerBook> generateBookStockSeller(Map<String, BookVendor> bookVendorStock) {
 
-        String[] titles = generateBookTitles();
-        for (int i = 0; i < titles.length; i++) {
-            String id = UUID.randomUUID().toString().replaceAll("-", "").substring(0, 6) + i;
-            String name = titles[i];
-            Double price = 20.0 + (i * 1.5); // Changing it
-
-            BookReseller bookReseller = new BookReseller(id, name, price);
-            bookResellerList.add(bookReseller);
+        List<ResellerBook> bookVendorList = new ArrayList<>();
+        for (Map.Entry<String, BookVendor> entry : bookVendorStock.entrySet()) {
+            ResellerBook resellerBook = new ResellerBook(entry.getValue().getId(), entry.getValue().getName(), entry.getValue().getPrice());
+            bookVendorList.add(resellerBook);
         }
-        return bookResellerList;
+        return bookVendorList;
     }
 
     public static Map<String, BookVendor> generateBookStockVendor() {

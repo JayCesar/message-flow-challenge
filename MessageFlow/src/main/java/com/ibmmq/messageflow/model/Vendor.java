@@ -1,14 +1,12 @@
-package com.ibmmq.messageflow.reseller.model;
+package com.ibmmq.messageflow.model;
 
-import com.ibmmq.messageflow.reseller.ResellerApp;
-import com.ibmmq.messageflow.service.StockResellerService;
+import com.ibmmq.messageflow.service.StockBookService;
 import jakarta.jms.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jms.annotation.JmsListener;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
 import java.util.Map;
 
 @Component
@@ -19,7 +17,7 @@ public class Vendor {
     @Autowired
     private JmsTemplate jmsTemplate;
 
-    private Map<String, BookVendor> bookStock = StockResellerService.generateBookStockVendor();
+    static Map<String, BookVendor> bookStock = StockBookService.generateBookStockVendor();
 
     @JmsListener(destination = TICKETS_QUEUE)
     public void onMessage(Message msg, Session session){
@@ -37,11 +35,12 @@ public class Vendor {
             System.out.println("           Redelivery flag: " + msg.getJMSRedelivered());
             System.out.println("========================================");
 
-            String requestedBook = text.substring(19);
+//            String requestedBook = text.substring(19);
+            String requestedBook = text.substring(0, 12);
 
-            if(bookStock.containsKey(requestedBook)) {
-                newPrice = calculateNewPrice(requestedBook);
-            }
+//            if(bookStock.containsKey(requestedBook)) {
+//                newPrice = calculateNewPrice(requestedBook);
+//            }
 
             final String msgID = msg.getJMSMessageID();
             MessageProducer replyDest = session.createProducer(msg.getJMSReplyTo());
@@ -55,12 +54,12 @@ public class Vendor {
 
     }
 
-    public Double calculateNewPrice(String requestedBook){
-        BookVendor bookRequested = bookStock.get(requestedBook);
-        double newPrice = bookRequested.getPrice();
-        newPrice+= (newPrice * 0.05);
-        bookRequested.setPrice(newPrice);
-        return newPrice;
-    }
+//    public Double calculateNewPrice(String requestedBook){
+//        BookVendor bookRequested = bookStock.get(requestedBook);
+//        double newPrice = bookRequested.getPrice();
+//        newPrice+= (newPrice * 0.05);
+//        bookRequested.setPrice(newPrice);
+//        return newPrice;
+//    }
 
 }

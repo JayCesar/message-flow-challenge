@@ -1,14 +1,12 @@
-package com.ibmmq.messageflow.reseller;
+package com.ibmmq.messageflow;
 
-import com.ibmmq.messageflow.reseller.model.Reseller;
+import com.ibmmq.messageflow.model.Reseller;
 import jakarta.jms.*;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.jms.annotation.EnableJms;
 import org.springframework.jms.core.JmsTemplate;
-
-import java.util.*;
 
 @EnableJms
 @SpringBootApplication
@@ -24,8 +22,6 @@ public class ResellerApp {
         Reseller reseller01 = new Reseller(jmsTemplate, TICKETS_QUEUE);
 
         reseller01.start();
-
-
 
     }
 

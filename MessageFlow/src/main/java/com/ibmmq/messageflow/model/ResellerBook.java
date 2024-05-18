@@ -1,4 +1,4 @@
-package com.ibmmq.messageflow.reseller.model;
+package com.ibmmq.messageflow.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,7 +9,7 @@ import lombok.ToString;
 @Setter
 @ToString
 @AllArgsConstructor
-public class BookReseller {
+public class ResellerBook {
     private String id;
     private String name;
     private Double price;
