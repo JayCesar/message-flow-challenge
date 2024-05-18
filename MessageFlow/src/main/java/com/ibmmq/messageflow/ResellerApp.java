@@ -19,7 +19,7 @@ public class ResellerApp {
         JmsTemplate jmsTemplate = context.getBean(JmsTemplate.class);
         jmsTemplate.setReceiveTimeout(2 * 1000);
 
-        Reseller reseller01 = new Reseller(jmsTemplate, TICKETS_QUEUE);
+        Reseller reseller01 = new Reseller("Saraiva", jmsTemplate, TICKETS_QUEUE);
 
         reseller01.start();
 

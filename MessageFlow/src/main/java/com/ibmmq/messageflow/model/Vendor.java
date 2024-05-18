@@ -40,25 +40,23 @@ public class Vendor {
 
             String bookIdRequested = text.substring(4, 12);
             Book requested = bookStock.get(bookIdRequested);
-            System.out.println("Book requested:" + requested);
-            System.out.println("Book ID:" + bookIdRequested);
+//            System.out.println("Book requested:" + requested);
+//            System.out.println("Book ID:" + bookIdRequested);
 
-            if (checkBookInStock(bookIdRequested)) {
-                int requestedAmount = takeRequestAmount(text);
-                System.out.println("Requested amount: " + requestedAmount);
-                if(verifyRequestedAmount(requestedAmount, requested)){
-                    newPrice = calculateNewPrice(bookIdRequested);
-                    System.out.println("Old amount: " + requested.getAmount());
-                    calculateDayProfit(newPrice, requestedAmount);
-                    int currentAAmount = requested.getAmount();
-                    requested.setAmount(currentAAmount - requestedAmount);
-                    System.out.println("Current amount: " + requested.getAmount());
-                }else{
-                    System.out.println("Quantidade superior");
-                }
-
-            }
-
+//            if (checkBookInStock(bookIdRequested)) {
+//                int requestedAmount = takeRequestAmount(text);
+//                System.out.println("Requested amount: " + requestedAmount);
+//                if(verifyRequestedAmount(requestedAmount, requested)){
+//                    newPrice = calculateNewPrice(bookIdRequested);
+//                    System.out.println("Old amount: " + requested.getAmount());
+//                    calculateDayProfit(newPrice, requestedAmount);
+//                    int currentAAmount = requested.getAmount();
+//                    requested.setAmount(currentAAmount - requestedAmount);
+//                    System.out.println("Current amount: " + requested.getAmount());
+//                }else{
+//                    System.out.println("Quantidade superior");
+//                }
+//            }
             final String msgID = msg.getJMSMessageID();
             MessageProducer replyDest = session.createProducer(msg.getJMSReplyTo());
             TextMessage replyMsg = session.createTextMessage("Replying to " + text);
