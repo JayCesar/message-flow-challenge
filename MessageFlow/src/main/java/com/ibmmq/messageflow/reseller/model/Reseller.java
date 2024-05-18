@@ -3,19 +3,19 @@ package com.ibmmq.messageflow.reseller.model;
 import com.ibmmq.messageflow.service.StockResellerService;
 import jakarta.jms.JMSException;
 import jakarta.jms.Message;
-import jakarta.jms.Session;
 import jakarta.jms.TextMessage;
+import lombok.Getter;
 import org.springframework.jms.core.JmsTemplate;
-import org.springframework.jms.core.MessageCreator;
 
 import java.util.List;
 import java.util.Random;
 
+@Getter
 public class Reseller extends Thread {
 
     private JmsTemplate jmsTemplate;
     private String TICKETS_QUEUE;
-    private List<Book> bookStock = StockResellerService.generateBookList();
+    private List<BookReseller> bookResellerStock = StockResellerService.generateBookList();
 
     public Reseller(JmsTemplate jmsTemplate, String TICKETS_QUEUE) {
         this.jmsTemplate = jmsTemplate;
@@ -24,7 +24,7 @@ public class Reseller extends Thread {
 
     @Override
     public void run() {
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 2; i++) {
             Message replyMsg = sendAndReceive();
             if (replyMsg != null) {
                 TextMessage textReplyMsg = (TextMessage) replyMsg;
@@ -41,16 +41,20 @@ public class Reseller extends Thread {
         }
     }
 
-    private static Book getRandomBook(List<Book> bookList) {
+    private static BookReseller getRandomBook(List<BookReseller> bookResellerList) {
         Random random = new Random();
-        int randomIndex = random.nextInt(bookList.size());
-        return bookList.get(randomIndex);
+        int randomIndex = random.nextInt(bookResellerList.size());
+        return bookResellerList.get(randomIndex);
     }
 
     public Message sendAndReceive(){
-        Book pickedBook = getRandomBook(bookStock);
+
+        BookReseller pickedBookReseller = getRandomBook(bookResellerStock);
+
+        String messageRequest = "Id: " + pickedBookReseller.getId() + ", Name: " + pickedBookReseller.getName();
+
         Message replyMsg = jmsTemplate.sendAndReceive(TICKETS_QUEUE, session -> {
-            TextMessage message = session.createTextMessage(pickedBook.getName());
+            TextMessage message = session.createTextMessage(messageRequest);
             System.out.println("Sending message: " + message.getText());
             return message;
         });
@@ -60,5 +64,6 @@ public class Reseller extends Thread {
     public Double calculateProfit(String reply){
         return null;
     }
+
 
 }

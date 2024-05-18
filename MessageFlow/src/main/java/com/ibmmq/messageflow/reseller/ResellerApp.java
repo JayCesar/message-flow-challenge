@@ -23,7 +23,6 @@ public class ResellerApp {
 
         Reseller reseller01 = new Reseller(jmsTemplate, TICKETS_QUEUE);
 
-        // send
         reseller01.start();
 
 
@@ -32,10 +31,3 @@ public class ResellerApp {
 
 }
 
-
-
-//Message replyMsg = jmsTemplate.sendAndReceive(TICKETS_QUEUE, session -> {
-//    TextMessage message = session.createTextMessage(payload);
-//    System.out.println("Sending message: " + message.getText());
-//    return message;
-//});

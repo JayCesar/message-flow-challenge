@@ -1,10 +1,10 @@
 package com.ibmmq.messageflow.service;
 
-import com.ibmmq.messageflow.reseller.model.Book;
+import com.ibmmq.messageflow.reseller.model.BookReseller;
+import com.ibmmq.messageflow.reseller.model.BookVendor;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Service
 public abstract class StockResellerService {
@@ -45,18 +45,36 @@ public abstract class StockResellerService {
         };
     }
 
-    public static List<Book> generateBookList() {
-        List<Book> bookList = new ArrayList<>();
+    public static List<BookReseller> generateBookList() {
+        List<BookReseller> bookResellerList = new ArrayList<>();
 
         String[] titles = generateBookTitles();
         for (int i = 0; i < titles.length; i++) {
-            String id = "ID" + (i + 1); // Generating ID (change it)
+            String id = UUID.randomUUID().toString().replaceAll("-", "").substring(0, 6) + i;
             String name = titles[i];
             Double price = 20.0 + (i * 1.5); // Changing it
 
-            Book book = new Book(id, name, price);
-            bookList.add(book);
+            BookReseller bookReseller = new BookReseller(id, name, price);
+            bookResellerList.add(bookReseller);
         }
-        return bookList;
+        return bookResellerList;
     }
+
+    public static Map<String, BookVendor> generateBookStockVendor() {
+
+        Map<String, BookVendor> bookVendorStock = new HashMap<>();
+
+        String[] titles = generateBookTitles();
+        for (int i = 0; i < titles.length; i++) {
+            String id = UUID.randomUUID().toString().replaceAll("-", "").substring(0, 6) + i;
+            String name = titles[i];
+            Double price = 20.0 + (i * 1.5);
+
+            BookVendor bookVendor = new BookVendor(id, name, price, 20);
+            bookVendorStock.put(bookVendor.getName(), bookVendor);
+        }
+
+        return bookVendorStock;
+    }
+
 }
