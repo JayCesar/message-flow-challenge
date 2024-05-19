@@ -22,7 +22,7 @@ import java.util.logging.Level;
 @Getter
 public class SenderService extends Thread {
 
-    static final String BOOKS_QUEUE = "DEV.QUEUE.1";
+    public static final String BOOKS_QUEUE = "DEV.QUEUE.1";
     private JmsTemplate jmsTemplate;
     private String[] resellerNames = DataGenerationService.generateResellerNames();
     private Map<String, Book> bookVendorStock = Vendor.bookStock;
