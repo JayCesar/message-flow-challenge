@@ -184,4 +184,12 @@ public class Vendor {
         new LoggerModel(Level.INFO, message, LocalDateTime.now());
     }
 
+    @Scheduled(fixedRate = 20000)
+    public void printDayProfit(){
+        String formatedProfit = String.format("%.3f", dayProfit);
+        String logMessage = "Day profit thus far: R$" + formatedProfit;
+        new LoggerModel(Level.INFO, logMessage, LocalDateTime.now());
+
+    }
+
 }

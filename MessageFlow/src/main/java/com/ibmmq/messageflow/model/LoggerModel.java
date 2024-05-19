@@ -36,7 +36,7 @@ public class LoggerModel {
 
     @Override
     public String toString() {
-        return String.format("LoggerModel{date='%s, level='%s', message='%s'}\n'",
+        return String.format("LoggerModel{date='%s, level='%s', message='%s'}'\n",
                 date.format(formatter), level, MESSAGE);
     }
 
