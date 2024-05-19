@@ -6,6 +6,7 @@ import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jms.annotation.JmsListener;
 import org.springframework.jms.core.JmsTemplate;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
@@ -151,14 +152,12 @@ public class Vendor {
         return requestedData;
     }
 
-//    @Scheduled(fixedRate = 1000)
-//    public static void updateStock(){
-//        for (Map.Entry<String, Book> entry : bookStock.entrySet()) {
-//            int currentAmount = entry.getValue().getAmount();
-////            System.out.println("Old amount: " + currentAmount);
-//            entry.getValue().setAmount(currentAmount += 5);
-////            System.out.println("New amount: " + entry.getValue().getAmount());
-//        }
-//    }
+    @Scheduled(fixedRate = 1000)
+    public static void updateStock(){
+        for (Map.Entry<String, Book> entry : bookStock.entrySet()) {
+            int currentAmount = entry.getValue().getAmount();
+            entry.getValue().setAmount(currentAmount += 5);
+        }
+    }
 
 }

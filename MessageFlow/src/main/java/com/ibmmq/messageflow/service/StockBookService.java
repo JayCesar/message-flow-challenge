@@ -44,7 +44,7 @@ public abstract class StockBookService {
         };
     }
 
-    public static List<Book> generateBookStockSeller(Map<String, Book> bookVendorStock) {
+    public static List<Book> generateBookStockReseller(Map<String, Book> bookVendorStock) {
 
         List<Book> bookVendorList = new ArrayList<>();
         for (Map.Entry<String, Book> entry : bookVendorStock.entrySet()) {
@@ -78,6 +78,21 @@ public abstract class StockBookService {
         String id = UUID.randomUUID().toString().replaceAll("-", "").substring(0, 6) + cont;
         if(id.length() == 7) id+=cont;
         return id;
+    }
+
+    public static String[] generateResellerNames() {
+        return new String[]{
+                "BookWave",
+                "PageTurner",
+                "ReadHub",
+                "LitHaven",
+                "NovelNest",
+                "StorySource",
+                "ProsePicks",
+                "ChapterChoice",
+                "BestsellerBarn",
+                "NarrativeNook"
+        };
     }
 
 }
