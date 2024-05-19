@@ -97,14 +97,6 @@ public class Vendor {
 
     }
 
-    public Double calculateNewBookPrice(String requestedBook) {
-        Book bookRequested = bookStock.get(requestedBook);
-        double newPrice = bookRequested.getPrice();
-        newPrice += (newPrice * 0.05);
-        bookRequested.setPrice(newPrice);
-        return newPrice;
-    }
-
     public boolean checkBookInStock(String bookIdRequested) {
         if (bookStock.containsKey(bookIdRequested)) {  // Does this type exist?
             Book requested = bookStock.get(bookIdRequested);
