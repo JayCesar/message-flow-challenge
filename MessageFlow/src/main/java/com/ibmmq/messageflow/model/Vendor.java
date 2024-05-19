@@ -9,6 +9,7 @@ import org.springframework.jms.core.JmsTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -38,8 +39,8 @@ public class Vendor {
     public void onMessage(Message msg, Session session) {
         String text = "";
         String replyVendor = "";
+        String logMessage = "";
         double newPrice = 0.0;
-
 
         try {
             if (msg instanceof TextMessage) text = ((TextMessage) msg).getText();
@@ -61,7 +62,7 @@ public class Vendor {
             Book requestedBook = bookStock.get(bookIdRequested);
 
             if (checkBookInStock(bookIdRequested)) {
-                if(verifyRequestedAmount(requestedAmount, requestedBook)){
+                if (verifyRequestedAmount(requestedAmount, requestedBook)) {
 
                     double oldPrice = requestedBook.getPrice();
                     String formattedOldPrice = String.format("%.3f", oldPrice);
@@ -76,8 +77,7 @@ public class Vendor {
 
                     double totalPriceToPay = requestedAmount * newPrice;
 
-                    replyVendor =
-                            "Resseler: " + resellerName + "\n" +
+                    replyVendor = "ResselerName: " + resellerName + "\n" +
                             "Requested book: " + requestedBook.getName() + "\n" +
                             "Requested Amount: " + requestedAmount + "\n" +
                             "Available in Stock: " + currentAmount + "\n" +
@@ -85,9 +85,15 @@ public class Vendor {
                             "Current Price: R$ " + formattedNewPrice + "\n" +
                             "TOTAL to pay: R$" + totalPriceToPay;
 
-                    new LoggerModel(Level.INFO, replyVendor);
+                    logMessage = "Reseller: " + resellerName
+                            + ", BookId: " + requestedBook.getId()
+                            + ", RequestedAmount: " + requestedBook.getAmount()
+                            + ", Total Payment: R$"
+                            + String.format("%.3f", totalPriceToPay);
 
-                }else{
+                    // Melhorar mensagem
+                    new LoggerModel(Level.INFO, logMessage, LocalDateTime.now());
+                } else {
                     replyVendor = "Requested amount exceeds available stock";
                 }
             }
@@ -125,17 +131,17 @@ public class Vendor {
         return true;
     }
 
-    public void calculateDayProfit(double newPrice, int requestedAmount){
+    public void calculateDayProfit(double newPrice, int requestedAmount) {
         double profitSale = newPrice * requestedAmount;
         dayProfit += profitSale;
     }
 
-    public String extractData(String text, String typeData){
+    public String extractData(String text, String typeData) {
         String requestedData = null;
         Pattern pattern = null;
         Matcher macther = null;
 
-        if(typeData.equalsIgnoreCase(BOOK_ID)){
+        if (typeData.equalsIgnoreCase(BOOK_ID)) {
             pattern = Pattern.compile("RequestedBookId: (\\w+)");
             macther = pattern.matcher(text);
             requestedData = macther.find() ? macther.group(1) : "";
@@ -157,7 +163,7 @@ public class Vendor {
     }
 
     @Scheduled(fixedRate = 10000)
-    public static void updateStock(){
+    public static void updateStock() {
         System.out.println("10 segundos");
         for (Map.Entry<String, Book> entry : bookStock.entrySet()) {
             int currentAmount = entry.getValue().getAmount();

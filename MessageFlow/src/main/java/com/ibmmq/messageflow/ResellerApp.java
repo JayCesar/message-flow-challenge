@@ -13,7 +13,6 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @SpringBootApplication
 @EnableScheduling
 public class ResellerApp {
-    static final String BOOKS_QUEUE = "DEV.QUEUE.1";
 
     public static void main(String[] args) throws JMSException {
         ConfigurableApplicationContext context = SpringApplication.run(ResellerApp.class, args);
