@@ -1,20 +1,18 @@
 package com.ibmmq.messageflow.model;
 
-import com.ibmmq.messageflow.service.StockBookService;
+import com.ibmmq.messageflow.service.DataGenerationService;
 import jakarta.jms.JMSException;
 import jakarta.jms.Message;
 import jakarta.jms.TextMessage;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
-import java.util.logging.Level;
 
 @Component
 @Getter
@@ -22,9 +20,9 @@ public class Sender extends Thread {
 
     static final String BOOKS_QUEUE = "DEV.QUEUE.1";
     private JmsTemplate jmsTemplate;
-    private String[] resellerNames = StockBookService.generateResellerNames();
+    private String[] resellerNames = DataGenerationService.generateResellerNames();
     private Map<String, Book> bookVendorStock = Vendor.bookStock;
-    private List<Book> resellerBookStock = StockBookService.generateBookStockReseller(bookVendorStock);
+    private List<Book> resellerBookStock = DataGenerationService.generateBookStockReseller(bookVendorStock);
 
     public Sender(JmsTemplate jmsTemplate) {
         this.jmsTemplate = jmsTemplate;
@@ -44,7 +42,7 @@ public class Sender extends Thread {
 
     public int generateRandomAmountOfBooks() {
         Random random = new Random();
-        int randomAmount = random.nextInt(4) + 1;
+        int randomAmount = random.nextInt(7) + 1;
         return randomAmount;
     }
 

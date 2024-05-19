@@ -1,6 +1,5 @@
 package com.ibmmq.messageflow.model;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.logging.Level;
@@ -35,10 +34,9 @@ public class LoggerModel {
         logger.log(level, this.toString());
     }
 
-
     @Override
     public String toString() {
-        return String.format("\nLoggerModel{date='%s, level='%s', message='%s'\n}",
+        return String.format("LoggerModel{date='%s, level='%s', message='%s'}\n'",
                 date.format(formatter), level, MESSAGE);
     }
 

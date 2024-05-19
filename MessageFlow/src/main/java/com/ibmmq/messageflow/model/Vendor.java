@@ -1,18 +1,18 @@
 package com.ibmmq.messageflow.model;
 
-import com.ibmmq.messageflow.service.StockBookService;
+import com.ibmmq.messageflow.service.DataGenerationService;
 import jakarta.jms.*;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jms.annotation.JmsListener;
 import org.springframework.jms.core.JmsTemplate;
+import org.springframework.jms.core.MessageCreator;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -33,13 +33,13 @@ public class Vendor {
     @Autowired
     private JmsTemplate jmsTemplate;
 
-    static Map<String, Book> bookStock = StockBookService.generateBookStockVendor();
+    static Map<String, Book> bookStock = DataGenerationService.generateBookStockVendor();
 
     @JmsListener(destination = BOOKS_QUEUE)
     public void onMessage(Message msg, Session session) {
-        String text = "";
-        String replyVendor = "";
-        String logMessage = "";
+        String text = null;
+        String replyVendor = null;
+        String logMessage = null;
         double newPrice = 0.0;
 
         try {
@@ -47,14 +47,6 @@ public class Vendor {
             else text = msg.toString();
 
             TextMessage replyMsg = null;
-
-//            System.out.println();
-//            System.out.println("========================================");
-//
-//            System.out.println("Responder received message: " + text);
-//            System.out.println("           Redelivery flag: " + msg.getJMSRedelivered());
-//            System.out.println("========================================");
-//            System.out.println();
 
             String resellerName = extractData(text, RESELLER_NAME);
             String bookIdRequested = extractData(text, BOOK_ID);
@@ -77,13 +69,20 @@ public class Vendor {
 
                     double totalPriceToPay = requestedAmount * newPrice;
 
-                    replyVendor = "ResselerName: " + resellerName + "\n" +
-                            "Requested book: " + requestedBook.getName() + "\n" +
-                            "Requested Amount: " + requestedAmount + "\n" +
-                            "Available in Stock: " + currentAmount + "\n" +
-                            "Old Price: R$ " + formattedOldPrice + "\n" +
-                            "Current Price: R$ " + formattedNewPrice + "\n" +
-                            "TOTAL to pay: R$" + totalPriceToPay;
+                    replyVendor = String.format(
+                                    "Requested book: %s\n" +
+                                    "Requested Amount: %d\n" +
+                                    "Available in Stock: %d\n" +
+                                    "Old Price: R$ %.2f\n" +
+                                    "Current Price: R$ %.2f\n" +
+                                    "TOTAL to pay: R$ %.2f",
+                            requestedBook.getName(),
+                            requestedAmount,
+                            currentAmount,
+                            oldPrice,
+                            newPrice,
+                            totalPriceToPay
+                    );
 
                     logMessage = "Reseller: " + resellerName
                             + ", BookId: " + requestedBook.getId()
@@ -94,7 +93,10 @@ public class Vendor {
                     // Melhorar mensagem
                     new LoggerModel(Level.INFO, logMessage, LocalDateTime.now());
                 } else {
+                    logMessage = "The quantity of requested books exceeds the available stock. Please check the inventory and adjust the quantity as needed.";
                     replyVendor = "Requested amount exceeds available stock";
+                    sendMessageToAnotherQueue(text);
+                    new LoggerModel(Level.WARNING, logMessage, LocalDateTime.now());
                 }
             }
 
@@ -162,13 +164,24 @@ public class Vendor {
         return requestedData;
     }
 
+    private void sendMessageToAnotherQueue(String payload) {
+        jmsTemplate.send("DEV.QUEUE.2", new MessageCreator() {
+            @Override
+            public Message createMessage(Session session) throws JMSException {
+                TextMessage message = session.createTextMessage(payload);
+                return message;
+            }
+        });
+    }
+
     @Scheduled(fixedRate = 10000)
     public static void updateStock() {
-        System.out.println("10 segundos");
         for (Map.Entry<String, Book> entry : bookStock.entrySet()) {
             int currentAmount = entry.getValue().getAmount();
             entry.getValue().setAmount(currentAmount += 3);
         }
+        String message = "Stock Updated";
+        new LoggerModel(Level.INFO, message, LocalDateTime.now());
     }
 
 }
