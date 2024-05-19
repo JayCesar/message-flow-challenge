@@ -2,6 +2,7 @@ package com.ibmmq.messageflow.model;
 
 import com.ibmmq.messageflow.service.StockBookService;
 import jakarta.jms.*;
+import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jms.annotation.JmsListener;
 import org.springframework.jms.core.JmsTemplate;
@@ -12,13 +13,12 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Component
+@Getter
 public class Vendor {
 
     public static double dayProfit = 0.0;
 
     static final String BOOKS_QUEUE = "DEV.QUEUE.1";
-
-//    static final String BOOKS_QUEUE = "BOOKS_QUEUE";
 
     private final String RESELLER_NAME = "resellerName";
 
@@ -150,5 +150,15 @@ public class Vendor {
 
         return requestedData;
     }
+
+//    @Scheduled(fixedRate = 1000)
+//    public static void updateStock(){
+//        for (Map.Entry<String, Book> entry : bookStock.entrySet()) {
+//            int currentAmount = entry.getValue().getAmount();
+////            System.out.println("Old amount: " + currentAmount);
+//            entry.getValue().setAmount(currentAmount += 5);
+////            System.out.println("New amount: " + entry.getValue().getAmount());
+//        }
+//    }
 
 }

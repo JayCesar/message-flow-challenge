@@ -5,8 +5,8 @@ import jakarta.jms.JMSException;
 import jakarta.jms.Message;
 import jakarta.jms.TextMessage;
 import lombok.Getter;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jms.core.JmsTemplate;
+
 
 import java.util.List;
 import java.util.Map;
@@ -29,13 +29,13 @@ public class Reseller extends Thread {
 
     @Override
     public void run() {
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 2; i++) {
             Message replyMsg = sendAndReceive();
 
-            try{
-                Thread.sleep(2000);
-            }catch (InterruptedException e){
-            }
+//            try{
+//                Thread.sleep(2000);
+//            }catch (InterruptedException e){
+//            }
             if (replyMsg != null) {
                 TextMessage textReplyMsg = (TextMessage) replyMsg;
                 String confirmationMessage = null;
@@ -85,8 +85,5 @@ public class Reseller extends Thread {
         return randomAmount; 
     }
 
-    public Double calculateProfit(String reply){
-        return null;
-    }
 
 }

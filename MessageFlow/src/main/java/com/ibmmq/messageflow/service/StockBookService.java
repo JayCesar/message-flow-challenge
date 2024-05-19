@@ -1,13 +1,11 @@
 package com.ibmmq.messageflow.service;
 
 import com.ibmmq.messageflow.model.Book;
-import lombok.Getter;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
 
 @Service
-@Getter
 public abstract class StockBookService {
 
     public static String[] generateBookTitles() {
@@ -61,16 +59,19 @@ public abstract class StockBookService {
         Map<String, Book> bookVendorStock = new HashMap<>();
 
         String[] titles = generateBookTitles();
+
         for (int i = 0; i < titles.length; i++) {
             String id = generateRandomId(i);
             String name = titles[i];
             Double price = 20.0 + (i * 1.5);
 
-            Book book = new Book(id, name, price, 1);
+            Book book = new Book(id, name, price, 20);
             bookVendorStock.put(book.getId(), book);
         }
 
         return bookVendorStock;
+
+
     }
 
     public static String generateRandomId(int cont) {
