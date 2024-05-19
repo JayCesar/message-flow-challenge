@@ -19,18 +19,12 @@ public class LoggerModel {
         logEvent(level);
     }
 
-    public LoggerModel(Level level, String MESSAGE) {
-        this.MESSAGE = MESSAGE;
-        this.level = level;
+    public LoggerModel(Level level, Exception exception) {
+        this.MESSAGE = "Name " + exception.getClass().getName() + " Message: " + exception.getMessage();
         logEvent(level);
     }
 
-    public LoggerModel(Level level, String MESSAGE, Exception exception) {
-        this.MESSAGE =
-                "Name " + exception.getClass().getName() + " Message: " + exception.getMessage();
-    }
-
-    public void logEvent(Level level){
+    public void logEvent(Level level) {
         logger.log(level, this.toString());
     }
 

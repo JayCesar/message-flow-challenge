@@ -40,7 +40,6 @@ public class Vendor {
         String text = null;
         String replyVendor = null;
         String logMessage = null;
-        double newPrice = 0.0;
 
         try {
             if (msg instanceof TextMessage) text = ((TextMessage) msg).getText();
@@ -48,19 +47,16 @@ public class Vendor {
 
             TextMessage replyMsg = null;
 
-            String resellerName = extractData(text, RESELLER_NAME);
-            String bookIdRequested = extractData(text, BOOK_ID);
-            int requestedAmount = Integer.parseInt(extractData(text, AMOUNT));
+            String resellerName = extractDataFromString(text, RESELLER_NAME);
+            String bookIdRequested = extractDataFromString(text, BOOK_ID);
+            int requestedAmount = Integer.parseInt(extractDataFromString(text, AMOUNT));
             Book requestedBook = bookStock.get(bookIdRequested);
 
             if (checkBookInStock(bookIdRequested)) {
                 if (verifyRequestedAmount(requestedAmount, requestedBook)) {
 
+                    double newPrice = 0.0;
                     double oldPrice = requestedBook.getPrice();
-                    String formattedOldPrice = String.format("%.3f", oldPrice);
-
-                    newPrice = calculateNewBookPrice(bookIdRequested);
-                    String formattedNewPrice = String.format("%.3f", newPrice);
 
                     calculateDayProfit(newPrice, requestedAmount);
 
@@ -69,28 +65,17 @@ public class Vendor {
 
                     double totalPriceToPay = requestedAmount * newPrice;
 
-                    replyVendor = String.format(
-                                    "Requested book: %s\n" +
-                                    "Requested Amount: %d\n" +
-                                    "Available in Stock: %d\n" +
-                                    "Old Price: R$ %.2f\n" +
-                                    "Current Price: R$ %.2f\n" +
-                                    "TOTAL to pay: R$ %.2f",
-                            requestedBook.getName(),
-                            requestedAmount,
-                            currentAmount,
-                            oldPrice,
-                            newPrice,
-                            totalPriceToPay
-                    );
-
-                    logMessage = "Reseller: " + resellerName
+                    replyVendor = "Reseller: " + resellerName
                             + ", BookId: " + requestedBook.getId()
-                            + ", RequestedAmount: " + requestedBook.getAmount()
-                            + ", Total Payment: R$"
-                            + String.format("%.3f", totalPriceToPay);
+                            + ", Requested book: " + requestedBook.getName()
+                            + ", Available in Stock: " + currentAmount
+                            + ", Requested Amount: " + requestedBook.getAmount()
+                            + ", Old Price: R$" + String.format("%.2f", oldPrice)
+                            + ", Current Price: R$" + String.format("%.2f", newPrice)
+                            + ", TOTAL: R$" + String.format("%.2f", totalPriceToPay);
 
-                    // Melhorar mensagem
+                    logMessage = replyVendor;
+
                     new LoggerModel(Level.INFO, logMessage, LocalDateTime.now());
                 } else {
                     logMessage = "The quantity of requested books exceeds the available stock. Please check the inventory and adjust the quantity as needed.";
@@ -102,12 +87,12 @@ public class Vendor {
 
             final String msgID = msg.getJMSMessageID();
             MessageProducer replyDest = session.createProducer(msg.getJMSReplyTo());
-            replyMsg = session.createTextMessage("Vendor Reply: \n" + replyVendor);
+            replyMsg = session.createTextMessage(replyVendor);
             replyMsg.setJMSCorrelationID(msgID);
             replyDest.send(replyMsg);
 
         } catch (JMSException e) {
-            e.printStackTrace();
+            new LoggerModel(Level.WARNING, e);
         }
 
     }
@@ -138,7 +123,7 @@ public class Vendor {
         dayProfit += profitSale;
     }
 
-    public String extractData(String text, String typeData) {
+    public String extractDataFromString(String text, String typeData) {
         String requestedData = null;
         Pattern pattern = null;
         Matcher macther = null;
@@ -178,18 +163,17 @@ public class Vendor {
     public static void updateStock() {
         for (Map.Entry<String, Book> entry : bookStock.entrySet()) {
             int currentAmount = entry.getValue().getAmount();
-            entry.getValue().setAmount(currentAmount += 3);
+            entry.getValue().setAmount(currentAmount += 2);
         }
         String message = "Stock Updated";
         new LoggerModel(Level.INFO, message, LocalDateTime.now());
     }
 
     @Scheduled(fixedRate = 20000)
-    public void printDayProfit(){
+    public void printDayProfit() {
         String formatedProfit = String.format("%.3f", dayProfit);
         String logMessage = "Day profit thus far: R$" + formatedProfit;
         new LoggerModel(Level.INFO, logMessage, LocalDateTime.now());
-
     }
 
 }

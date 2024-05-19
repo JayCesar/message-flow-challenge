@@ -5,14 +5,15 @@ import jakarta.jms.JMSException;
 import jakarta.jms.Message;
 import jakarta.jms.TextMessage;
 import lombok.Getter;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.logging.Level;
 
 @Component
 @Getter
@@ -46,17 +47,18 @@ public class Sender extends Thread {
         return randomAmount;
     }
 
-    public void checkMessage(Message replyMsg){
+    public void checkMessage(Message replyMsg) {
         if (replyMsg != null) {
             TextMessage textReplyMsg = (TextMessage) replyMsg;
             String confirmationMessage = null;
             try {
                 confirmationMessage = textReplyMsg.getText();
             } catch (JMSException e) {
-                throw new RuntimeException(e);
+                new LoggerModel(Level.SEVERE, e);
             }
         } else {
-            System.out.println("Nenhuma resposta recebida para o livro ");
+            String logMsg = "No response received";
+            new LoggerModel(Level.WARNING, logMsg, LocalDateTime.now());
         }
     }
 
@@ -75,7 +77,6 @@ public class Sender extends Thread {
 
         Message replyMsg = jmsTemplate.sendAndReceive(BOOKS_QUEUE, session -> {
             TextMessage message = session.createTextMessage(messageRequest);
-            System.out.println();
             return message;
         });
 

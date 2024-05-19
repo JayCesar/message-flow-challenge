@@ -65,7 +65,7 @@ public abstract class DataGenerationService {
             String name = titles[i];
             Double price = 20.0 + (i * 1.5);
 
-            Book book = new Book(id, name, price, 1);
+            Book book = new Book(id, name, price, 20);
             bookVendorStock.put(book.getId(), book);
         }
 
