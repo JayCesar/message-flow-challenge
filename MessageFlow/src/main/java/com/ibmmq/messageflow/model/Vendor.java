@@ -10,6 +10,8 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -45,13 +47,13 @@ public class Vendor {
 
             TextMessage replyMsg = null;
 
-            System.out.println();
-            System.out.println("========================================");
-
-            System.out.println("Responder received message: " + text);
-            System.out.println("           Redelivery flag: " + msg.getJMSRedelivered());
-            System.out.println("========================================");
-            System.out.println();
+//            System.out.println();
+//            System.out.println("========================================");
+//
+//            System.out.println("Responder received message: " + text);
+//            System.out.println("           Redelivery flag: " + msg.getJMSRedelivered());
+//            System.out.println("========================================");
+//            System.out.println();
 
             String resellerName = extractData(text, RESELLER_NAME);
             String bookIdRequested = extractData(text, BOOK_ID);
@@ -82,6 +84,8 @@ public class Vendor {
                             "Old Price: R$ " + formattedOldPrice + "\n" +
                             "Current Price: R$ " + formattedNewPrice + "\n" +
                             "TOTAL to pay: R$" + totalPriceToPay;
+
+                    new LoggerModel(Level.INFO, replyVendor);
 
                 }else{
                     replyVendor = "Requested amount exceeds available stock";
@@ -152,11 +156,12 @@ public class Vendor {
         return requestedData;
     }
 
-    @Scheduled(fixedRate = 1000)
+    @Scheduled(fixedRate = 10000)
     public static void updateStock(){
+        System.out.println("10 segundos");
         for (Map.Entry<String, Book> entry : bookStock.entrySet()) {
             int currentAmount = entry.getValue().getAmount();
-            entry.getValue().setAmount(currentAmount += 5);
+            entry.getValue().setAmount(currentAmount += 3);
         }
     }
 

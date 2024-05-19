@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.logging.Level;
 
 @Component
 @Getter
@@ -42,7 +43,7 @@ public class Sender extends Thread {
 
     public int generateRandomAmountOfBooks() {
         Random random = new Random();
-        int randomAmount = random.nextInt(5) + 1;
+        int randomAmount = random.nextInt(4) + 1;
         return randomAmount;
     }
 
@@ -55,20 +56,15 @@ public class Sender extends Thread {
             } catch (JMSException e) {
                 throw new RuntimeException(e);
             }
-            System.out.println(confirmationMessage);
         } else {
             System.out.println("Nenhuma resposta recebida para o livro ");
         }
     }
 
-    @Scheduled(fixedRate = 3000)
-    public Message sendAndReceive() {
-
-        System.out.println("Enviando mensagem de novo");
+    @Scheduled(fixedRate = 5000)
+    public void sendAndReceive() {
         jmsTemplate.setReceiveTimeout(2 * 1000);
-
         String resselerName = getRandomName(resellerNames);
-        System.out.println(resselerName);
         Book pickedResellerBook = getRandomBook(resellerBookStock);
         int amountRequested = generateRandomAmountOfBooks();
 
@@ -81,16 +77,14 @@ public class Sender extends Thread {
         Message replyMsg = jmsTemplate.sendAndReceive(BOOKS_QUEUE, session -> {
             TextMessage message = session.createTextMessage(messageRequest);
             System.out.println();
-            System.out.println("Sending message: \n" + message.getText());
             return message;
         });
 
-        return replyMsg;
+        checkMessage(replyMsg);
     }
 
     @Override
     public void run() {
-        Message replyMsg = sendAndReceive();
-        checkMessage(replyMsg);
+        sendAndReceive();
     }
 }
