@@ -1,6 +1,8 @@
-package com.ibmmq.messageflow.model;
+package com.ibmmq.messageflow.service;
 
-import com.ibmmq.messageflow.service.DataGenerationService;
+import com.ibmmq.messageflow.model.Book;
+import com.ibmmq.messageflow.model.LoggerModel;
+import com.ibmmq.messageflow.model.Vendor;
 import jakarta.jms.JMSException;
 import jakarta.jms.Message;
 import jakarta.jms.TextMessage;
@@ -8,6 +10,7 @@ import lombok.Getter;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -15,9 +18,9 @@ import java.util.Map;
 import java.util.Random;
 import java.util.logging.Level;
 
-@Component
+@Service
 @Getter
-public class Sender extends Thread {
+public class SenderService extends Thread {
 
     static final String BOOKS_QUEUE = "DEV.QUEUE.1";
     private JmsTemplate jmsTemplate;
@@ -25,7 +28,7 @@ public class Sender extends Thread {
     private Map<String, Book> bookVendorStock = Vendor.bookStock;
     private List<Book> resellerBookStock = DataGenerationService.generateBookStockReseller(bookVendorStock);
 
-    public Sender(JmsTemplate jmsTemplate) {
+    public SenderService(JmsTemplate jmsTemplate) {
         this.jmsTemplate = jmsTemplate;
     }
 

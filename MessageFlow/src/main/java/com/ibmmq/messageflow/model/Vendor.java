@@ -33,7 +33,7 @@ public class Vendor {
     @Autowired
     private JmsTemplate jmsTemplate;
 
-    static Map<String, Book> bookStock = DataGenerationService.generateBookStockVendor();
+    public static Map<String, Book> bookStock = DataGenerationService.generateBookStockVendor();
 
     @JmsListener(destination = BOOKS_QUEUE)
     public void onMessage(Message msg, Session session) {

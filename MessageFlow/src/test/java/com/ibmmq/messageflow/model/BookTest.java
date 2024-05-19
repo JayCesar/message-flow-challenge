@@ -3,7 +3,6 @@ package com.ibmmq.messageflow.model;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-
 // POJO (Plain Old Java Object)
 public class BookTest {
 

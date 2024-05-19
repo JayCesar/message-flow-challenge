@@ -1,6 +1,7 @@
-package com.ibmmq.messageflow;
+package com.ibmmq.messageflow.model;
 
-import com.ibmmq.messageflow.model.Sender;
+import com.ibmmq.messageflow.service.SenderService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -12,12 +13,12 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @SpringBootApplication
 @EnableScheduling
 public class ResellerApp {
-
+    
     public static void main(String[] args) {
         ConfigurableApplicationContext context = SpringApplication.run(ResellerApp.class, args);
         JmsTemplate jmsTemplate = context.getBean(JmsTemplate.class);
-        Sender sender = new Sender(jmsTemplate);
-        sender.run();
+        SenderService senderService = new SenderService(jmsTemplate);
+        senderService.run();
     }
 
 }
