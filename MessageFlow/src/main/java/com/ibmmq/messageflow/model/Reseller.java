@@ -5,6 +5,7 @@ import jakarta.jms.JMSException;
 import jakarta.jms.Message;
 import jakarta.jms.TextMessage;
 import lombok.Getter;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jms.core.JmsTemplate;
 
 import java.util.List;
@@ -15,21 +16,26 @@ import java.util.Random;
 public class Reseller extends Thread {
 
     private JmsTemplate jmsTemplate;
-    private String TICKETS_QUEUE;
+    private String BOOKS_QUEUE;
     private String resellerName;
     private Map<String, Book> bookVendorStock = Vendor.bookStock;
     private List<Book> resellerBookStock = StockBookService.generateBookStockSeller(bookVendorStock);
 
-    public Reseller(String name, JmsTemplate jmsTemplate, String TICKETS_QUEUE) {
+    public Reseller(String name, JmsTemplate jmsTemplate, String BOOKS_QUEUE) {
         this.resellerName = name;
         this.jmsTemplate = jmsTemplate;
-        this.TICKETS_QUEUE = TICKETS_QUEUE;
+        this.BOOKS_QUEUE = BOOKS_QUEUE;
     }
 
     @Override
     public void run() {
-        for (int i = 0; i < 2; i++) {
+        for (int i = 0; i < 10; i++) {
             Message replyMsg = sendAndReceive();
+
+            try{
+                Thread.sleep(2000);
+            }catch (InterruptedException e){
+            }
             if (replyMsg != null) {
                 TextMessage textReplyMsg = (TextMessage) replyMsg;
                 String confirmationMessage = null;
@@ -63,10 +69,10 @@ public class Reseller extends Thread {
                 "RequestedBookName: " + pickedResellerBook.getName() + "\n" +
                 "RequestedAmount: " + amountRequested;
 
-        Message replyMsg = jmsTemplate.sendAndReceive(TICKETS_QUEUE, session -> {
+        Message replyMsg = jmsTemplate.sendAndReceive(BOOKS_QUEUE, session -> {
             TextMessage message = session.createTextMessage(messageRequest);
             System.out.println();
-            System.out.println("Sending message: \n" + message.getText());
+//            System.out.println("Sending message: \n" + message.getText());
             return message;
         });
 

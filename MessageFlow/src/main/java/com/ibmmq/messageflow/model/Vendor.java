@@ -14,9 +14,11 @@ import java.util.regex.Pattern;
 @Component
 public class Vendor {
 
-    static double dayProfit = 0.0;
+    public static double dayProfit = 0.0;
 
-    static final String TICKETS_QUEUE = "DEV.QUEUE.1";
+    static final String BOOKS_QUEUE = "DEV.QUEUE.1";
+
+//    static final String BOOKS_QUEUE = "BOOKS_QUEUE";
 
     private final String RESELLER_NAME = "resellerName";
 
@@ -29,7 +31,7 @@ public class Vendor {
 
     static Map<String, Book> bookStock = StockBookService.generateBookStockVendor();
 
-    @JmsListener(destination = TICKETS_QUEUE)
+    @JmsListener(destination = BOOKS_QUEUE)
     public void onMessage(Message msg, Session session) {
         String text = "";
         String replyVendor = "";
@@ -81,7 +83,7 @@ public class Vendor {
                             "TOTAL to pay: R$" + totalPriceToPay;
 
                 }else{
-                    System.out.println("Quantidade superior");
+                    replyVendor = "Requested amount exceeds available stock";
                 }
             }
 

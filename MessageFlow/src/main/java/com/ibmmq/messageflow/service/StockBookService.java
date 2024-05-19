@@ -4,8 +4,6 @@ import com.ibmmq.messageflow.model.Book;
 import lombok.Getter;
 import org.springframework.stereotype.Service;
 
-import java.math.BigInteger;
-import java.security.SecureRandom;
 import java.util.*;
 
 @Service
@@ -68,7 +66,7 @@ public abstract class StockBookService {
             String name = titles[i];
             Double price = 20.0 + (i * 1.5);
 
-            Book book = new Book(id, name, price, 20);
+            Book book = new Book(id, name, price, 1);
             bookVendorStock.put(book.getId(), book);
         }
 
