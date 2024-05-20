@@ -1,7 +1,19 @@
 ![banner](https://github.com/JayCesar/message-flow-challenge/assets/44206400/5d6ce1b3-372a-4db3-98f4-143f277e1d7e)
 
+<h4 align="center"> 
+  <img alt="GitHub Top Language" src="https://img.shields.io/github/languages/top/JayCesar/message-flow-challenge" />
+  <img alt="" src="https://img.shields.io/github/repo-size/JayCesar/message-flow-challenge" />
+  <img alt="GitHub Last Commit" src="https://img.shields.io/github/last-commit/JayCesar/message-flow-challenge" />
+</h4>
+
+<p align="center">
+<img alt="banner" align="center" src="http://img.shields.io/static/v1?label=STATUS&message=%20FINISHED&color=GREEN&style=for-the-badge" />
+</p>
+
 ### 🖥️ About
 This is a Spring Boot application that simulates a book reselling system, where resellers can request books from a vendor. The application consists of different components that work together to handle the book request, stock management, and logging processes. It uses IBM MQ to put the book requests into a message queue, which ensures reliable communication between different parts of the system
+
+
 
 ### 📝 BookHub Class Diagram
 ```mermaid
