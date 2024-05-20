@@ -7,7 +7,7 @@ import java.util.logging.Logger;
 
 public class LoggerModel {
     private static final Logger logger = Logger.getLogger(Vendor.class.getName());
-    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS");
     private Level level;
     private final String MESSAGE;
     private LocalDateTime date;
@@ -30,7 +30,7 @@ public class LoggerModel {
 
     @Override
     public String toString() {
-        return String.format("LoggerModel{date='%s, level='%s', message='%s'}'\n",
+        return String.format("LoggerModel{date='%s', level='%s', message='%s'}'\n",
                 date.format(formatter), level, MESSAGE);
     }
 
