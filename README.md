@@ -147,15 +147,19 @@ This diagram shows the relationships between the classes involved in the project
 - Navigate to the directory where you want to clone the project.
 - Run the following command to clone the repository:
 ```git
-git clone <repository_url>
+git clone https://github.com/JayCesar/message-flow-challenge.git
 ```
-| Replace ```<repository_url>``` with the actual URL of the project's Git repository.
+![clone](https://github.com/JayCesar/git-study-tests/assets/44206400/cb96ec2b-0607-4bcd-9d40-214c78107e84)
 
 #### 2) Run the IBM MQ Image
 - Navigate to the root directory of the application and run the following command
 ```git
 docker-compose up ibm-mq
 ```
+You will see messages like the following in your terminal:
+
+![dokcer](https://github.com/JayCesar/git-study-tests/assets/44206400/857d2e1c-fc02-4fc8-b78e-9e11b17bc7c4)
+
 Obs: It will start the specific service defined in the Docker Compose file.
 
 #### 4) Import the project into your IDE
@@ -164,15 +168,20 @@ Obs: It will start the specific service defined in the Docker Compose file.
 - Choose the option to import an existing project (e.g., "Open" or "Import Project" in IntelliJ, "Import" in Eclipse).
 - Navigate to the directory where you cloned the project and select the project folder.
 - Follow the prompts in your IDE to import the project.
+- e.g Intelij:
+  
+![openProject](https://github.com/JayCesar/git-study-tests/assets/44206400/d9a23cb4-d82e-4053-a632-f449396ef962)
 
 #### 5) Set up the required dependencies
 
 - Most modern IDEs automatically detect and download the required dependencies specified in the project's pom.xml file (for Maven projects).
 - If your IDE doesn't automatically download the dependencies, you can manually trigger a Maven build or update by following the IDE's specific instructions.
 
+![loadMaven](https://github.com/JayCesar/git-study-tests/assets/44206400/036e560c-8068-4125-95c5-e53a24576362)
+
 #### 6) Run the application
 - Locate the main class of the application: **ResellerApp**.
 - In your IDE, right-click on the main class and select the option to run the application (e.g., "Run" or "Run As Java Application").
 - If everything is set up correctly, the application should start running, and you should see the logs in your IDE's console or terminal. As the example below:
 
-
+![runCOde](https://github.com/JayCesar/git-study-tests/assets/44206400/e9372eab-ce7c-470e-9fbb-a8cbc7a42ba4)
