@@ -159,7 +159,7 @@ public class Vendor {
         return newPrice;
     }
 
-    @Scheduled(fixedRate = 20000)
+    @Scheduled(fixedRate = 60000)
     public static void updateStock() {
         for (Map.Entry<String, Book> entry : bookStock.entrySet()) {
             int currentAmount = entry.getValue().getAmount();
