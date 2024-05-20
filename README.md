@@ -17,6 +17,14 @@ This is a Spring Boot application that simulates a book reselling system, where 
 
 ---
 
+### 🔨 Tech heap 
+- [x] Java 17
+- [x] Docker
+- [x] IBM MQ
+- [x] SpringBoot
+
+---
+
 ### 🚧 Project Structure
 ```plaintext
 src/main/java/com/ibmmq/messageflow
