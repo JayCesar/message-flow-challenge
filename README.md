@@ -13,15 +13,35 @@
 ---
 
 ## 🖥️ About
-This is a Spring Boot application that simulates a book reselling system, where resellers can request books from a vendor. The application consists of different components that work together to handle the book request, stock management, and logging processes. It uses IBM MQ to put the book requests into a message queue, which ensures reliable communication between different parts of the system
+This is a Spring Boot application that simulates a book reselling system, where resellers can request books from a vendor. The application consists of different components that work together to handle the book request, stock management, and logging processes. It uses IBM MQ to put the book requests into a message queue, which ensures reliable communication between different parts of the systemm.
+
+### Key Features
+
+- **Reseller Request Handling:** The application simulates resellers sending book requests to a vendor queue. The requests include information such as the reseller name, requested book ID, book name, and requested amount.
+  
+- **Vendor Response:** The vendor processes the incoming requests, verifies the availability of the requested books, calculates the new book prices, updates the stock, and sends a response back to the reseller with the transaction details.
+  
+- **Stock Management:** The vendor manages the book stock and updates it at regular intervals by adding new units to each book's available quantity.
+  
+- **Profit Calculation:** The application calculates the day's profit based on the book sales and logs the current profit at regular intervals.
+  
+- **Logging:** The application incorporates a logging utility to log messages, exceptions, and other relevant information during the execution.
+  
+- **Scheduling:** Spring's scheduling features are utilized to run certain tasks, such as updating the stock and logging the day's profit, at fixed intervals.
+  
+- **REST API:** A REST API endpoint is provided to retrieve a list of resellers and their respective book stocks.
 
 ---
 
 ## 🔨 Tech heap 
 - [x] Java 17
 - [x] Docker
+- [x] Java Message Service (JMS) 
 - [x] IBM MQ
 - [x] SpringBoot
+- [x] Lombok
+- [x] Maven
+
 
 ---
 
@@ -130,12 +150,19 @@ classDiagram
 This diagram shows the relationships between the classes involved in the project:
 
 - **```ResellersController```** uses **```RequestResellersService```** to retrieve a list of **```ResellerDTO```** objects.
+  
 - **```RequestResellersService```** interacts with **```ResellerDTO```** and **```Book```** to create the JSON list of resellers and their book stock.
+  
 - **```ResellerDTO```** contains a reseller's name and a list of **```Book```** objects representing their book stock.
+  
 - **```Book```** is a model class representing a book with properties like id, name, amount, and price.
+  
 - **```Vendor```** manages the book stock (`Map<String, Book>`) and performs different operations related to book requests and stock updates.
+  
 - **```SenderService```** uses **```Vendor```** to receive messages and **```DataGenerationService```** to generate random data.
+  
 - **```DataGenerationService```** is responsible for generating reseller names, book stock for resellers, and book stock for the vendor.
+  
 - **```LoggerModel```** is a utility class for logging purposes, used by **```Vendor```**, **```SenderService```**, and **```DataGenerationService```**.
 
 ---
@@ -144,9 +171,13 @@ This diagram shows the relationships between the classes involved in the project
 
 #### 1) Prerequisites
 - You need to have Java Development Kit (JDK) installed on your system. This application requires Java 8 or higher.
+  
 - Install Apache Maven, which is a build automation tool for Java projects.
+  
 - Install an Integrated Development Environment (IDE) of your choice, such as IntelliJ IDEA, Eclipse, or Visual Studio Code (with appropriate Java extensions).
+  
 - Install Docker, you need it to run the contianer with IBM MQ settings.
+  
 - Install git, you need it to clone this repostiory
 
 #### 2) Clone the repository
@@ -173,8 +204,11 @@ Obs: It will start the specific service defined in the Docker Compose file.
 #### 4) Import the project into your IDE
 
 - Open your IDE.
+  
 - Choose the option to import an existing project (e.g., "Open" or "Import Project" in IntelliJ, "Import" in Eclipse).
+  
 - Navigate to the directory where you cloned the project and select the project folder.
+  
 - Follow the prompts in your IDE to import the project.
 
 e.g Intelij:
@@ -184,13 +218,16 @@ e.g Intelij:
 #### 5) Set up the required dependencies
 
 - Most modern IDEs automatically detect and download the required dependencies specified in the project's pom.xml file (for Maven projects).
+  
 - If your IDE doesn't automatically download the dependencies, you can manually trigger a Maven build or update by following the IDE's specific instructions.
-
+  
 ![loadMaven](https://github.com/JayCesar/git-study-tests/assets/44206400/036e560c-8068-4125-95c5-e53a24576362)
 
 #### 6) Run the application
 - Locate the main class of the application: **ResellerApp**.
+  
 - In your IDE, right-click on the main class and select the option to run the application (e.g., "Run" or "Run As Java Application").
+  
 - If everything is set up correctly, the application should start running, and you should see the logs in your IDE's console or terminal. As the example below:
 
 ![runCOde](https://github.com/JayCesar/git-study-tests/assets/44206400/e9372eab-ce7c-470e-9fbb-a8cbc7a42ba4)
@@ -199,16 +236,23 @@ e.g Intelij:
 
 - **By endpoint**
    - Once the application is running, you can test the various functionalities by sending a HTTP GET request to the exposed endpoint: `http://localhost:8080/resellerapp/resellers`. It will retrive the list of resellers.
+     
    - Cpen your browser then copy and paste the link: `http://localhost:8080/resellerapp/resellers`. You see a JSON like this:
 ![json](https://github.com/JayCesar/message-flow-challenge/assets/44206400/0a7281c4-4faa-416d-b904-18fe2250cd5f)
+
    - The stock of books is updated every 60 seconds (1 minute) according to the business logic, and the price of the books changes whenever a reseller requests it.
 
 - **By logs**
   - In your IDE terminal, you will see various types of logs:
+    
    - Every 1 minute, a log entry for stock updates.
+     
    - Every 20 seconds, a log entry for the day's profit of the vendor.
+     
    - Logs for messages (books requesteds) received by the producer (Vendor class).
+     
    - Logs for when the amounb of books is superior thatn available in stock
+     
    - Logs for any exceptions that may occur.
   
    ![image](https://github.com/JayCesar/message-flow-challenge/assets/44206400/c6efaa9e-d68c-4927-ac6c-4e94e143464c)
@@ -420,12 +464,18 @@ This method is annotated with @Scheduled(fixedRate = 5000), which means it will 
 The method performs the following tasks:
 
 1) Sets the receive timeout for the jmsTemplate to 2 seconds.
-2) Retrieves a random reseller name using the getRandomName(...) method.
-3) Retrieves a random book from the reseller's book stock using the getRandomBook(...) method.
-4) Generates a random amount of books to request using the generateRandomAmountOfBooks() method.
-5) Constructs a message request string with the reseller name, requested book ID, requested book name, and requested amount.
-6) Sends the message request to the BOOKS_QUEUE using the sendAndReceive(...) method of the jmsTemplate. This method also receives a reply message from the queue.
-7) Calls the checkMessage(...) method with the received reply message to handle any errors or log messages.
+   
+3) Retrieves a random reseller name using the getRandomName(...) method.
+   
+5) Retrieves a random book from the reseller's book stock using the getRandomBook(...) method.
+   
+7) Generates a random amount of books to request using the generateRandomAmountOfBooks() method.
+   
+9) Constructs a message request string with the reseller name, requested book ID, requested book name, and requested amount.
+    
+11) Sends the message request to the BOOKS_QUEUE using the sendAndReceive(...) method of the jmsTemplate. This method also receives a reply message from the queue.
+    
+13) Calls the checkMessage(...) method with the received reply message to handle any errors or log messages.
 
 ```java
 @Scheduled(fixedRate = 5000)
@@ -470,11 +520,17 @@ public void run() {
 This method is a **JMS message listener** annotated with **@JmsListener(destination = BOOKS_QUEUE)**. It is invoked when a message arrives in the BOOKS_QUEUE. The method performs the following tasks:
 
 - Extracts the reseller name, requested book ID, and requested amount from the incoming message using the extractDataFromString method.
+  
 - Checks if the requested book is in stock using the checkBookInStock method.
+  
 - Verifies if the requested amount is available using the verifyRequestedAmount method.
+  
 - If the requested amount is available, it calculates the new book price using the calculateNewBookPrice method, updates the stock, calculates the day's profit using the calculateDayProfit method, and constructs a reply message with the transaction details.
+  
 - If the requested amount exceeds the available stock, it sends a message to another queue **(DEV.QUEUE.2)** using the **sendMessageToAnotherQueue** method.
+  
 - Sends the reply message back to the sender using the JMSReplyTo destination.
+  
 - Logs the transaction details or any exceptions using the LoggerModel class.
 
 ```java
