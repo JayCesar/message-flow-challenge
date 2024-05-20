@@ -1,6 +1,7 @@
 package com.ibmmq.messageflow;
 
 import com.ibmmq.messageflow.service.SenderService;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -17,8 +18,6 @@ public class ResellerApp {
         ConfigurableApplicationContext context = SpringApplication.run(ResellerApp.class, args);
         JmsTemplate jmsTemplate = context.getBean(JmsTemplate.class);
         SenderService senderService = new SenderService(jmsTemplate);
-        senderService.run();
-        senderService.run();
         senderService.run();
     }
 

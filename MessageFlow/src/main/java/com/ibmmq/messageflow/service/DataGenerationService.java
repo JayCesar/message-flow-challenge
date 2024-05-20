@@ -76,10 +76,10 @@ public abstract class DataGenerationService {
     }
 
     public static String generateRandomId(int cont) {
-        String id = UUID.randomUUID().toString().replaceAll("-", "").substring(0, 6) + cont;
-        if(id.length() == 7) id+=cont;
-        return id;
-    }
+            String id = UUID.randomUUID().toString().replaceAll("-", "").substring(0, 6) + cont;
+            if(id.length() == 7) id+=cont;
+            return id;
+        }
 
     public static String[] generateResellerNames() {
         return new String[]{
