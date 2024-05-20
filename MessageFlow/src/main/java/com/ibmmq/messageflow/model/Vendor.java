@@ -72,7 +72,7 @@ public class Vendor {
                             + ", Requested Amount: " + requestedBook.getAmount()
                             + ", Old Price: R$" + String.format("%.2f", oldPrice)
                             + ", Current Price: R$" + String.format("%.2f", newPrice)
-                            + ", TOTAL: R$" + String.format("%.2f", totalPriceToPay);
+                            + ", TOTAL: R$ " + String.format("%.2f", totalPriceToPay);
 
                     logMessage = replyVendor;
 
@@ -159,7 +159,7 @@ public class Vendor {
         return newPrice;
     }
 
-    @Scheduled(fixedRate = 10000)
+    @Scheduled(fixedRate = 20000)
     public static void updateStock() {
         for (Map.Entry<String, Book> entry : bookStock.entrySet()) {
             int currentAmount = entry.getValue().getAmount();

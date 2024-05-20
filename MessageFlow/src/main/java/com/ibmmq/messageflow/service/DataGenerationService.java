@@ -8,6 +8,8 @@ import java.util.*;
 @Service
 public abstract class DataGenerationService {
 
+    private static final int BOOKS_INITIAL_AMOUNT = 10;
+
     public static String[] generateBookTitles() {
         return new String[]{
                 "To Kill a Mockingbird",
@@ -65,7 +67,7 @@ public abstract class DataGenerationService {
             String name = titles[i];
             Double price = 20.0 + (i * 1.5);
 
-            Book book = new Book(id, name, price, 20);
+            Book book = new Book(id, name, price, BOOKS_INITIAL_AMOUNT);
             bookVendorStock.put(book.getId(), book);
         }
 
