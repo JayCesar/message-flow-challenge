@@ -55,7 +55,7 @@ public class Vendor {
             if (checkBookInStock(bookIdRequested)) {
                 if (verifyRequestedAmount(requestedAmount, requestedBook)) {
 
-                    double newPrice = 0.0;
+                    double newPrice = calculateNewBookPrice(requestedBook.getId());
                     double oldPrice = requestedBook.getPrice();
 
                     calculateDayProfit(newPrice, requestedAmount);
@@ -151,6 +151,14 @@ public class Vendor {
         });
     }
 
+    public Double calculateNewBookPrice(String requestedBook) {
+        Book bookRequested = bookStock.get(requestedBook);
+        double newPrice = bookRequested.getPrice();
+        newPrice += (newPrice * 0.05);
+        bookRequested.setPrice(newPrice);
+        return newPrice;
+    }
+
     @Scheduled(fixedRate = 10000)
     public static void updateStock() {
         for (Map.Entry<String, Book> entry : bookStock.entrySet()) {
@@ -164,7 +172,7 @@ public class Vendor {
     @Scheduled(fixedRate = 20000)
     public void printDayProfit() {
         String formatedProfit = String.format("%.3f", dayProfit);
-        String logMessage = "Day profit thus far: R$" + formatedProfit;
+        String logMessage = "Day profit thus far: R$ " + formatedProfit;
         new LoggerModel(Level.INFO, logMessage, LocalDateTime.now());
     }
 
