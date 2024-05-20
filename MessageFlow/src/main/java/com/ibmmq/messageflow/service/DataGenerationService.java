@@ -8,7 +8,7 @@ import java.util.*;
 @Service
 public abstract class DataGenerationService {
 
-    private static final int BOOKS_INITIAL_AMOUNT = 10;
+    private static final int BOOKS_INITIAL_AMOUNT = 2;
 
     public static String[] generateBookTitles() {
         return new String[]{

@@ -20,6 +20,7 @@ public class LoggerModel {
     }
 
     public LoggerModel(Level level, Exception exception) {
+        this.date = LocalDateTime.now();
         this.MESSAGE = "Name " + exception.getClass().getName() + " Message: " + exception.getMessage();
         logEvent(level);
     }

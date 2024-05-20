@@ -18,6 +18,8 @@ public class ResellerApp {
         JmsTemplate jmsTemplate = context.getBean(JmsTemplate.class);
         SenderService senderService = new SenderService(jmsTemplate);
         senderService.run();
+        senderService.run();
+        senderService.run();
     }
 
 }
