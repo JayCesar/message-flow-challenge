@@ -191,7 +191,8 @@ git clone https://github.com/JayCesar/message-flow-challenge.git
 ![clone](https://github.com/JayCesar/git-study-tests/assets/44206400/cb96ec2b-0607-4bcd-9d40-214c78107e84)
 
 #### 2) Run the IBM MQ Image
-- Navigate to the root directory of the application and run the following command
+- Navigate to the root directory of the application: ```message-flow-challenge/MessageFlow```
+- Run the following command
 ```git
 docker compose up
 ```
