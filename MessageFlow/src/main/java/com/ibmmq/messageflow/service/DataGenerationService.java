@@ -71,7 +71,6 @@ public abstract class DataGenerationService {
 
         return bookVendorStock;
 
-
     }
 
     public static String generateRandomId(int cont) {

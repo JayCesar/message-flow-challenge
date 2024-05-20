@@ -9,7 +9,6 @@ import jakarta.jms.TextMessage;
 import lombok.Getter;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -25,8 +24,7 @@ public class SenderService extends Thread {
     public static final String BOOKS_QUEUE = "DEV.QUEUE.1";
     private JmsTemplate jmsTemplate;
     private String[] resellerNames = DataGenerationService.generateResellerNames();
-    private Map<String, Book> bookVendorStock = Vendor.bookStock;
-    private List<Book> resellerBookStock = DataGenerationService.generateBookStockReseller(bookVendorStock);
+    private List<Book> resellerBookStock = DataGenerationService.generateBookStockReseller(Vendor.bookStock);
 
     public SenderService(JmsTemplate jmsTemplate) {
         this.jmsTemplate = jmsTemplate;
