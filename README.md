@@ -154,7 +154,7 @@ git clone https://github.com/JayCesar/message-flow-challenge.git
 #### 2) Run the IBM MQ Image
 - Navigate to the root directory of the application and run the following command
 ```git
-docker-compose up ibm-mq
+docker compose up
 ```
 You will see messages like the following in your terminal:
 
@@ -168,7 +168,8 @@ Obs: It will start the specific service defined in the Docker Compose file.
 - Choose the option to import an existing project (e.g., "Open" or "Import Project" in IntelliJ, "Import" in Eclipse).
 - Navigate to the directory where you cloned the project and select the project folder.
 - Follow the prompts in your IDE to import the project.
-- e.g Intelij:
+
+e.g Intelij:
   
 ![openProject](https://github.com/JayCesar/git-study-tests/assets/44206400/d9a23cb4-d82e-4053-a632-f449396ef962)
 
@@ -185,3 +186,24 @@ Obs: It will start the specific service defined in the Docker Compose file.
 - If everything is set up correctly, the application should start running, and you should see the logs in your IDE's console or terminal. As the example below:
 
 ![runCOde](https://github.com/JayCesar/git-study-tests/assets/44206400/e9372eab-ce7c-470e-9fbb-a8cbc7a42ba4)
+
+#### 7) Test the application
+
+- **By endpoint**
+   - Once the application is running, you can test the various functionalities by sending a HTTP GET request to the exposed endpoint: `http://localhost:8080/resellerapp/resellers`. It will retrive the list of resellers.
+   - Cpen your browser then copy and paste the link: `http://localhost:8080/resellerapp/resellers`. You see a JSON like this:
+![json](https://github.com/JayCesar/message-flow-challenge/assets/44206400/0a7281c4-4faa-416d-b904-18fe2250cd5f)
+   - The stock of books is updated every 60 seconds (1 minute) according to the business logic, and the price of the books changes whenever a reseller requests it.
+
+- **By logs**
+  - In your IDE terminal, you will see various types of logs:
+   - Every 1 minute, a log entry for stock updates.
+   - Every 20 seconds, a log entry for the day's profit of the vendor.
+   - Logs for messages (books requesteds) received by the producer (Vendor class).
+   - Logs for when the amounb of books is superior thatn available in stock
+   - Logs for any exceptions that may occur.
+  
+   ![image](https://github.com/JayCesar/message-flow-challenge/assets/44206400/c6efaa9e-d68c-4927-ac6c-4e94e143464c)
+
+
+
