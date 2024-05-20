@@ -130,3 +130,49 @@ This diagram shows the relationships between the classes involved in the project
 - **```DataGenerationService```** is responsible for generating reseller names, book stock for resellers, and book stock for the vendor.
 - **```LoggerModel```** is a utility class for logging purposes, used by **```Vendor```**, **```SenderService```**, and **```DataGenerationService```**.
 
+---
+
+### ▶️ How to run this application?
+
+#### 1) Prerequisites
+- You need to have Java Development Kit (JDK) installed on your system. This application requires Java 8 or higher.
+- Install Apache Maven, which is a build automation tool for Java projects.
+- Install an Integrated Development Environment (IDE) of your choice, such as IntelliJ IDEA, Eclipse, or Visual Studio Code (with appropriate Java extensions).
+- Install Docker, you need it to run the contianer with IBM MQ settings.
+- Install git, you need it to clone this repostiory
+
+#### 2) Clone the repository
+
+- Open a terminal or command prompt.
+- Navigate to the directory where you want to clone the project.
+- Run the following command to clone the repository:
+```git
+git clone <repository_url>
+```
+| Replace ```<repository_url>``` with the actual URL of the project's Git repository.
+
+#### 2) Run the IBM MQ Image
+- Navigate to the root directory of the application and run the following command
+```git
+docker-compose up ibm-mq
+```
+Obs: It will start the specific service defined in the Docker Compose file.
+
+#### 4) Import the project into your IDE
+
+- Open your IDE.
+- Choose the option to import an existing project (e.g., "Open" or "Import Project" in IntelliJ, "Import" in Eclipse).
+- Navigate to the directory where you cloned the project and select the project folder.
+- Follow the prompts in your IDE to import the project.
+
+#### 5) Set up the required dependencies
+
+- Most modern IDEs automatically detect and download the required dependencies specified in the project's pom.xml file (for Maven projects).
+- If your IDE doesn't automatically download the dependencies, you can manually trigger a Maven build or update by following the IDE's specific instructions.
+
+#### 6) Run the application
+- Locate the main class of the application: **ResellerApp**.
+- In your IDE, right-click on the main class and select the option to run the application (e.g., "Run" or "Run As Java Application").
+- If everything is set up correctly, the application should start running, and you should see the logs in your IDE's console or terminal. As the example below:
+
+
