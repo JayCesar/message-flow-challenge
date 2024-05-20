@@ -726,4 +726,15 @@ public void printDayProfit() {
 }
 ```
 
+---
+
+### Other classes:
+
+**LoggerModel:** Used to print log messages.
+
+**ResellersController:** Used to access and list resellers and their stock.
+
+**ResellerDto:** Used to populate data that will be accessed via RESTful API.
+
+--- 
 
