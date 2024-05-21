@@ -171,14 +171,18 @@ This diagram shows the relationships between the classes involved in the project
 
 ### In Prod Environment
 
-1) Clone this repository
+**1) Clone this repository**
+   
 ```git clone https://github.com/JayCesar/message-flow-challenge.git```
 
-2) Run this command inside the root folder MessageFlow:
+**2) Run this command inside the root folder MessageFlow:**
+   
 ```docker compose up -d```
+
 It will run .jar file, builds a image from it and runs MQ
 
-4) You should run this command to read the logs:
+**3) You should run this command to read the logs:**
+   
 ```docker logs message-flow -f```
 
 It will show the logs from the container (from the application)
