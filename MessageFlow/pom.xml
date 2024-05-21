@@ -9,7 +9,7 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.ibmmq</groupId>
-    <artifactId>MessageFlow</artifactId>
+    <artifactId>message-flow</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>MessageFlow</name>
     <description>MessageFlow</description>

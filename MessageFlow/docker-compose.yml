@@ -17,6 +17,18 @@ services:
     volumes:
       - "./20-config.mqsc:/etc/mqm/20-config.mqsc"
       - "qm1data:/mnt/mqm"
+  message-flow:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    container_name: message-flow
+    restart: always
+    environment:
+      MQ_HOSTNAME: "mqseries"
+    depends_on:
+      - mqseries
 volumes:
   qm1data: 
 
