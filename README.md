@@ -169,6 +169,23 @@ This diagram shows the relationships between the classes involved in the project
 
 ## ▶️ How to run this application?
 
+### In Prod Environment
+
+1) Clone this repository
+```git clone https://github.com/JayCesar/message-flow-challenge.git```
+
+2) Run this command:
+```docker compose up -d```
+It will run .jar file, builds a image from it and runs MQ
+
+4) You should run this command to read the logs:
+```docker logs message-flow -f```
+
+It will show the logs from the container (from the application)
+ 
+
+### In Development Environment
+
 #### 1) Prerequisites
 - You need to have Java Development Kit (JDK) installed on your system. This application requires Java 8 or higher.
   
@@ -194,7 +211,7 @@ git clone https://github.com/JayCesar/message-flow-challenge.git
 - Navigate to the root directory of the application: ```message-flow-challenge/MessageFlow```
 - Run the following command
 ```git
-docker compose up
+docker compose up -mqseries
 ```
 You will see messages like the following in your terminal:
 
