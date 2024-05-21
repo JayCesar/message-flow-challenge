@@ -174,7 +174,7 @@ This diagram shows the relationships between the classes involved in the project
 1) Clone this repository
 ```git clone https://github.com/JayCesar/message-flow-challenge.git```
 
-2) Run this command:
+2) Run this command inside the root folder MessageFlow:
 ```docker compose up -d```
 It will run .jar file, builds a image from it and runs MQ
 
