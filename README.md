@@ -86,65 +86,70 @@ Contains the ResellerApp class, which is the main entry point of the Spring Boot
 ## 📝 BookHub Class Diagram
 ```mermaid
 classDiagram
-    ResellersController --* RequestResellersService
-    RequestResellersService ..> ResellerDTO
-    ResellerDTO *-- Book
-    Vendor *-- Book
-    SenderService ..> Vendor
-    SenderService ..> DataGenerationService
-    Vendor ..> LoggerModel
-    SenderService ..> LoggerModel
-    DataGenerationService ..> LoggerModel
-    class ResellersController {
-        -RequestResellersService
-        +list() List~ResellerDTO~
-    }
-    class RequestResellersService {
-        +listAllResellers() List~ResellerDTO~
-    }
-    class ResellerDTO {
-        -String name
-        -List~Book~ resellerBookStock
-    }
-    class Book {
-        -String id
-        -String name
-        -int amount
-        -double price
-    }
-    class Vendor {
-        -Map~String, Book~ bookStock
-        +onMessage(Message, Session)
-        +checkBookInStock(String) boolean
-        +verifyRequestedAmount(int, Book) boolean
-        +calculateDayProfit(double, int)
-        +extractDataFromString(String, String) String
-        +sendMessageToAnotherQueue(String)
-        +calculateNewBookPrice(String) Double
-        +updateStock()
-        +printDayProfit()
-    }
-    class SenderService {
-        -JmsTemplate jmsTemplate
-        -String[] resellerNames
-        -List~Book~ resellerBookStock
-        +getRandomBook(List~Book~) Book
-        +getRandomName(String[]) String
-        +generateRandomAmountOfBooks() int
-        +checkMessage(Message)
-        +sendAndReceive()
-        +run()
-    }
-    class DataGenerationService {
-        +generateResellerNames() String[]
-        +generateBookStockReseller(Map~String, Book~) List~Book~
-        +generateBookStockVendor() Map~String, Book~
-    }
-    class LoggerModel {
-        +LoggerModel(Level, String)
-        +LoggerModel(Level, Exception)
-        +LoggerModel(Level, String, LocalDateTime)
-    }
+direction BT
+class Book {
+  + Book(String, String, Double, int) 
+  - Double price
+  - String id
+  - int amount
+  - String name
+}
+class DataGenerationService {
+  + DataGenerationService() 
+  - int BOOKS_INITIAL_AMOUNT
+}
+class LoggerModel {
+  + LoggerModel(Level, String, LocalDateTime) 
+  + LoggerModel(Level, Exception) 
+  - Logger logger
+  ~ DateTimeFormatter formatter
+  - Level level
+  - String MESSAGE
+  - LocalDateTime date
+}
+class RequestResellersService {
+  + RequestResellersService() 
+  ~ List~Book~ resellerStock
+  - String[] resellerNames
+}
+class ResellerDTO {
+  + ResellerDTO(String, List~Book~) 
+  + ResellerDTO() 
+  - String name
+  - List~Book~ resellerBookStock
+}
+class ResellersController {
+  + ResellersController() 
+  - RequestResellersService RequestResellersService
+}
+class SenderService {
+  + SenderService(JmsTemplate) 
+  - JmsTemplate jmsTemplate
+  - String[] resellerNames
+  + String BOOKS_QUEUE
+  - List~Book~ resellerBookStock
+}
+class Vendor {
+  + Vendor() 
+  + Map~String, Book~ bookStock
+  ~ String BOOKS_QUEUE
+  - String RESELLER_NAME
+  - String AMOUNT
+  + double dayProfit
+  - String BOOK_ID
+  - JmsTemplate jmsTemplate
+}
+
+DataGenerationService  ..>  Book : «create»
+RequestResellersService "1" *--> "resellerStock *" Book 
+RequestResellersService  ..>  ResellerDTO : «create»
+ResellerDTO "1" *--> "resellerBookStock *" Book 
+ResellersController "1" *--> "RequestResellersService 1" RequestResellersService 
+SenderService "1" *--> "resellerBookStock *" Book 
+SenderService  ..>  LoggerModel : «create»
+Vendor "1" *--> "bookStock *" Book 
+Vendor  ..>  LoggerModel : «create»
+
 ```
 
 This diagram shows the relationships between the classes involved in the project:
